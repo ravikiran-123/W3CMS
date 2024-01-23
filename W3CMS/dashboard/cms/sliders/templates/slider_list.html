@@ -1,0 +1,37 @@
+{% extends 'dashboard/elements/layouts/admin.html' %}
+{% load static %}
+{% load mptt_tags %}
+{% load static widget_tweaks %}
+
+
+{% block additional_css %}
+ 
+{% endblock %}
+
+
+
+{% block message %}
+{% include 'dashboard/elements/alert.html' %}
+{% endblock %}
+
+
+{% block content %}
+    <h1>{{ page_title }}</h1>
+    <ul>
+        {% for slider in sliders %}
+            <a href="{% url 'dashboard:sliders:slider_edit' id=slider.id %}"><li>{{ slider.title }}</li></a>
+        {% empty %}
+            <li>No image available.</li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'dashboard:sliders:slider_create' %}">Create New Slider</a>
+
+
+    {% endblock %}
+
+
+{% block additional_js %}
+
+   
+{% endblock %}
+

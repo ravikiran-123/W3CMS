@@ -1,0 +1,316 @@
+{% extends 'dashboard/elements/layouts/admin.html' %}
+{% load static widget_tweaks %}
+
+
+{% block additional_css %}
+ 
+{% endblock %}
+
+
+
+{% block message %}
+{% include 'dashboard/elements/alert.html' %}
+{% endblock %}
+
+
+{% block content %}
+
+<div id="message">
+</div>
+
+
+
+
+<!-- Filter -->
+
+<div class="custome-accordion">
+    <div class="accordion" id="accordionSubscriberFilter">
+        <div class="accordion-item card">
+            <h2 class="accordion-header border-0" id="headingOne">
+            <button class="accordion-button d-flex justify-content-between align-items-center collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collaps-page-filter" aria-expanded="false" aria-controls="collaps-page-filter">
+                    <span class="acc-heading">Filter</span>
+            </button>
+            </h2>
+            <div id="collaps-page-filter" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionSubscriberFilter" style="">
+                <div class="accordion-body card-body pt-0">
+                <form action="{% url 'dashboard:subscribe:subscribers' %}" method="post" id="blog-filter-form">{% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-lg-6 col-xl-3">
+                                    <div class="mb-3">
+                                        
+                                        <input type="text"
+                                        name="filter-subscribe-name"
+                                        class="form-control input-default"
+                                        placeholder="Name"
+                                        {% if form_data.filter_name %}
+                                        value="{{form_data.filter_name}}"
+                                        {% endif %}
+                                        >
+                                    </div>
+                                </div>
+                              
+                                <div class="col-lg-6 col-xl-3">
+                                    
+                                    <input type="text" 
+                                            name="filter-subscribe-email" 
+                                            class="form-control input-default"
+                                            placeholder="email"
+                                            {% if form_data.filter_email %}
+                                            value="{{form_data.filter_email}}"
+                                            {% endif %}
+                                            >
+                                </div>
+                                <div class="col-lg-6 col-xl-3">
+                                    
+                                    <input type="text" 
+                                            name="filter-subscribe-phone" 
+                                            class="form-control input-default"
+                                            placeholder="Phone"
+                                            {% if form_data.filter_phone %}
+                                            value="{{form_data.filter_phone}}"
+                                            {% endif %}
+                                            >
+                                </div>
+                                <div class="col-lg-6 col-xl-3">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <button type="submit" class="btn btn-primary w-100 mb-3"><i class="fa-solid fa-magnifying-glass me-1"></i>Filter</button>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <a href="javascript:void(0);" type="button" class="btn light btn-outline-primary  w-100 clear-subscriber-filter">Clear</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+                
+                </div>
+            </div>  
+        </div>
+    </div>
+</div>
+
+<!--END Filter-->
+
+
+
+
+
+
+<!-- Add Subscriber -->
+
+{% if add_edit_view %}
+
+<div class="custome-accordion">
+    <div class="accordion" id="accordionAddSubscriber">
+        <div class="accordion-item card">
+            <h2 class="accordion-header border-0" id="headingOne">
+            <button class="accordion-button d-flex justify-content-between align-items-center {% if not edit %}collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#collaps-add-subscriber" aria-expanded="{% if edit %}true {% else %} false{% endif %}" aria-controls="collaps-add-subscriber">
+                    <span class="acc-heading">Add Subscriber</span>
+            </button>
+            </h2>
+            <div id="collaps-add-subscriber" class="accordion-collapse collapse  {%if edit %}show{% endif %}" aria-labelledby="headingOne" data-bs-parent="#accordionAddSubscriber" style="">
+                <div class="accordion-body card-body pt-0">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                               
+                               <div class="col-md-4 mb-3">
+                                <label>Name</label>
+                                {{ subscribe_form.name|attr:"type:text"|attr:"class:form-control"|attr:"placeholder:Name"}}
+
+                               </div>
+                               <div class="col-md-4 mb-3">
+                                    <label>Email</label>
+                                    {{ subscribe_form.email|attr:"class:form-control"|attr:"placeholder:Email"}}
+                                    
+                                    <div class="text-danger w-100 mt-1">
+                                        {{ subscribe_form.email.errors }}
+                                    </div>
+                               </div>
+                               <div class="col-md-4 mb-3">
+                                <label>Phone</label>
+                                {{ subscribe_form.phone|attr:"type:text"|attr:"class:form-control"|attr:"placeholder:Phone"}}
+                               </div>
+                               <div class="col-md-3 mb-3">
+                                <div class="form-check custom-checkbox">
+                                    {{ subscribe_form.status|attr:"type:checkbox"|attr:"class:form-check-input"}}
+                                    <label class="form-check-label">{{subscribe_form.status.label}}</label>
+                                </div>
+                               </div>
+                               <div class="col-md-3  mb-3">
+                                <div class="form-check custom-checkbox">
+                                    {{ subscribe_form.unsubscribe|attr:"type:checkbox"|attr:"class:form-check-input"}}
+                                    <label class="form-check-label">{{subscribe_form.unsubscribe.label}}</label>
+                                </div>
+                               </div>
+                               
+                                
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+                
+                </div>
+            </div>  
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!--END Subscriber-->
+
+
+
+<div class="col-lg-12">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Subscribers</h4>
+            
+            
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-responsive-md">
+                    <thead>
+                        <tr>
+
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Status</th>
+                                <th>Unsubscribe</th>
+                                {% if  perms.subscribe.change_subscribes or perms.subscribe.delete_subscribes %}
+                                <th>Action</th>
+                                {% endif %}
+                            
+                        </tr>
+                    </thead>
+                    <tbody>
+                       
+                        {% for subscriber in subscribers %}
+                        <tr>
+                        
+                            <td>{{subscriber.name}}</td>
+                            <td>{{subscriber.email}}</td>
+                            <td>{{subscriber.phone}}</td>
+                            <td>{{subscriber.status}}</td>
+                            <td>{{subscriber.unsubscribe}}</td>
+                            {% if  perms.subscribe.change_subscribes or perms.subscribe.delete_subscribes %}
+                            <td>
+                                <div class="sweetalert">
+                                    <div class="d-flex">
+                                        {% if  perms.subscribe.change_subscribes %}
+                                        <a href="{% url 'dashboard:subscribe:edit_subscriber' id=subscriber.id %}" class="btn btn-primary shadow btn-xs sharp me-1" title="Edit"><i class="fa fa-pencil"></i></a>
+                                        {% endif %}
+                                        {% if  perms.subscribe.delete_subscribes %}
+                                        <a href="{% url 'dashboard:subscribe:delete_subscriber' id=subscriber.id %}" class="btn btn-danger shadow btn-xs sharp sweet-success-cancel" title="Delete"><i class="fa fa-trash"></i></a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </td>
+                            {% endif %}
+                        </tr>
+                        {% endfor %}
+                           
+                    </tbody>
+                </table>
+            </div>
+
+
+            <nav mt-5 class="d-flex align-items-center justify-content-between pt-3">
+
+                <p>
+                <span class="current">
+                Page {{ subscribers.number }} of {{ subscribers.paginator.num_pages }}.
+                </span> 
+                </p>
+                    
+
+                <ul class="pagination pagination-gutter  justify-content-end">
+                    
+                        <li class="page-item page-indicator ">
+                            <a class="page-link" href="{% if subscribers.has_previous %}
+                                                        ?page={{ subscribers.previous_page_number }}
+                                                        {% else %}
+                                                        javascript:void(0);
+                                                        {% endif %}">
+                                <i class="la la-angle-left"></i></a>
+                        </li>
+
+                    {% for i in subscribers.paginator.page_range|slice:":3" %}
+
+                        <li class="page-item {% if subscribers.number == i %}
+                                            active{% endif %}"><a class="page-link" href="?page={{i}}">{{i}}</a></li>
+                    
+                    {% endfor %}
+
+                    
+                    {% if subscribers.number > 3 %}
+                    <li class="page-item active"><a class="page-link" href="?page={{ subscribers.number }}">{{ subscribers.number }}</a></li>
+                    {% endif %}
+                    
+                    <li class="page-item page-indicator ">
+                        <a class="page-link"  href="{% if subscribers.has_next %}
+                                                    ?page={{ subscribers.next_page_number }}
+                                                    {% else %}
+                                                    javascript:void(0);
+                                                    {% endif %}">
+                            <i class="la la-angle-right"></i></a>
+                    </li>
+
+                </ul>
+            </nav>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+{% endblock %}
+
+
+{% block additional_js %}
+<script type="text/javascript">
+    $('.sweet-success-cancel').on('click', function (event) {
+        event.preventDefault();
+        const url = $(this).attr('href');
+    
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            type: "warning",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: "Yes, delete it !!",
+            confirmButtonText: 'Delete',
+            confirmButtonColor: "#DD6B55"
+            
+        }).then((result) => {
+            if (result.value) {
+                window.location.href = url;
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                event.preventDefault();
+            }
+        })
+    });
+</script>
+{% endblock %}

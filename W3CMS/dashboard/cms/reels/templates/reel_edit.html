@@ -1,0 +1,39 @@
+{% extends 'dashboard/elements/layouts/admin.html' %}
+{% load static %}
+{% load mptt_tags %}
+{% load static widget_tweaks %}
+
+
+{% block additional_css %}
+ 
+{% endblock %}
+
+
+
+{% block message %}
+{% include 'dashboard/elements/alert.html' %}
+{% endblock %}
+
+
+{% block content %}
+
+
+    <h1>{{ page_title }}</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Save</button>
+    </form>
+    
+    <a href="{% url 'dashboard:reels:reel_list' %}">Back to Reels List</a>
+
+
+    {% endblock %}
+
+
+{% block additional_js %}
+
+
+
+   
+{% endblock %}

@@ -1,0 +1,198 @@
+{% extends 'theme5/elements/layouts/layout1.html' %}
+
+{% load static custom_tags %}
+
+{% load static custom_tags widget_tweaks %}
+
+{% block additional_css %}
+{% endblock %}
+
+
+
+
+{% block message %}
+{% comment %} {% include 'dashboard/elements/alert.html' %} {% endcomment %}
+{% endblock %}
+
+
+
+{% block content %}
+
+
+{% if instance %}
+    {% if not is_locked %}
+        <div class="blog-post blog-single blog-post-style-2 sidebar">
+            <div class="dlab-post-info">
+                <div class="dlab-post-meta text-center">
+                    <ul>
+                        <li class="post-tag">
+                            {% for cate in instance.categories.all %}
+                                <a href="{% url 'frontend:blogcategory' slug=cate.slug %}">{{cate.title}}.</a>
+                            {% endfor %}
+                        </li>
+                        <li class="post-date">{{instance.publish_on}}</li>
+                    </ul>
+                </div>
+                <div class="dlab-post-title text-center">
+                    <h2 class="post-title">{{ instance.title }}</h2>
+                </div>
+                <div class="dlab-post-text text">
+                    <div class="wp-block-image alignwide">
+                        <figure class="aligncenter">
+                            <img src="/media/{{ instance.feature_image }}" alt="">
+                        </figure>
+                    </div>
+                    <p>{{ instance.excerpt }}</p>
+                    {{instance.content|safe}}
+                    <!-- <blockquote class="wp-block-quote style2">44
+                        <div class="quote-info">
+                            <p>Do you ever feel sick of the habits in your life that consume you? Maybe it’s eating a bag of chips and not realizing that you have eaten half the bag (guilty, chips are my kryptonite). Or it is eating out every night because you’re tired and it’s hard?</p>
+                            <h6 class="block-quote-author">Peter Thomas Roth</h6>
+                        </div>
+                    </blockquote> -->
+                    <!-- <p>Mauris nec purus rutrum lorem ultricies dignissim. Suspendisse vestibulum eu lorem non fermentum. Maecenas eu pellentesqu dui. Vestibulu dui neque, egestas at suscipit et, convallis sed eros. Etiam hendrerit tempor asina viverra ac.</p>
+                    <div class="wp-block-image alignwide">
+                        <figure class="alignright">
+                            <img src="images/gallery/pic1.jpg" alt="">
+                        </figure>
+                    </div> -->
+                    <div class="row post-footer m-lr0">
+                        <div class="col-lg-4 p-lr0 m-b30">												 
+                            <span class="m-r5">by</span> <a href="{% url 'frontend:author' username=instance.user.username %}">By {{instance.user.first_name}}{{instance.user.last_name}}</a> 
+                        </div>
+                        <div class="col-lg-4 p-lr0 m-b30 text-center">
+                            <div class="text-right">
+                                <a href="javascript:void(0);" class="text-uppercase"></a>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 p-lr0 m-b30">
+                            <div class="text-right">
+                                <a href="javascript:void(0);" class="text-uppercase"></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="clear m-b30" id="comment-list">
+            <div class="comments-area" id="comments">
+                <div class="row m-b30">
+                    <div class="col-lg-3">
+                        <div class="sticky-top">
+                            {% with allcomments.count as total_comments %}
+                            <h6 class="title-style1 text-uppercase">{{ total_comments }} <span>Review{{ total_comments|pluralize }}</h6>
+                            {% endwith %}
+                        </div>
+                    </div>
+                    <div class="col-lg-9">
+                        <!-- comment list Start -->
+                        {% load mptt_tags %}
+                        <ol class="comment-list">
+                            {% recursetree comments %}
+                            <li class="comment">
+                                <div class="comment-body">
+                                    <div class="comment-content">
+                                        <p>{{ node.content }}</p>
+                                    </div>
+                                    <div class="comment-author vcard"> 
+                                        <img class="avatar photo" src="/static/theme5/images/no-user.png" alt=""> 
+                                        <cite class="fn">{{ node.name }}</cite> <span class="says">says:</span> 
+                                    </div>
+                                    <div class="comment-meta"> 
+                                        <a href="javascript:void(0);">{{ node.publish }}</a> 
+                                    </div>
+                                    {% if node.level < 3 %}
+                                    <div class="reply"> <a href="{{ node.id }}" data-commentid="{{ node.id }}" data-postid="{{ instance.id }}" data-replyto="Reply to {{ node.name }}" class="comment-reply-link w3-comment-reply"><i class="fa fa-share"></i></a> </div>
+                                    {% endif %}
+                                </div>
+                                {% if not node.is_leaf_node %}
+                                <ol class="children">
+                                    {{ children }}
+                                </ol>
+                                {% endif %}
+                            </li>
+                            {% endrecursetree %}
+                        </ol>
+                        <!-- comment list END -->
+                    </div>
+                </div>
+                <div class="comments-div">
+                    <div class="row" id="ReplyFormContainer">
+                        <div class="col-lg-3">
+                            <div class="sticky-top">
+                                {% comment %} <h6 class="title-style1 text-uppercase">Leave a Reply</h6> {% endcomment %}
+                                <h6>
+                                    <span id="reply-title"></span>
+                                    <small> <a style="display:none;" href="javascript:void(0);" id="cancel-comment-reply" rel="nofollow">Cancel reply</a></small>  
+                                </h6>
+                            </div>
+                        </div>
+                        <div class="col-lg-9">
+                            <!-- Form -->
+                            <div class="comment-respond" id="respond">
+                                <h3 class="comment-reply-title" id="reply-title"><small> <a style="display:none;" href="#" id="cancel-comment-reply-link" rel="nofollow">Cancel reply</a> </small> </h3>
+                                {% include 'theme5/elements/alert.html' %}
+                                {% if message %}
+                                <div class="text-success mb-3">{{ message }}</div>
+                                {% endif %}
+                                {% if errors %}
+                                <div class="text-danger mb-3">{{ errors }}</div>
+                                {% endif %}
+                                <form class="comment-form" id="commentform" method="post">
+                                    {% csrf_token %}
+                                    {{ comment_form.parent|attr:"type:hidden"|attr:"id:comment_parent_id"}}
+                                    {{ comment_form.status|attr:"type:hidden"|attr:"id:id_status"}}
+                                    <p class="comment-form-author">
+                                        <label for="name">Name <span class="required">*</span></label>
+                                        {{ comment_form.name|attr:"type:text"|attr:"id:name"|attr:"class:form-control"|attr:"placeholder:Name" }}
+                                    </p>
+                                    <p class="comment-form-email">
+                                        <label for="email">Email <span class="required">*</span></label>
+                                        {{ comment_form.email|attr:"type:text"|attr:"id:email"|attr:"class:form-control"|attr:"placeholder:Email" }}
+                                    </p>
+                                    <p class="comment-form-comment">
+                                        <label for="comment">Comment</label>
+                                        {{ comment_form.content|attr:"type:text"|attr:"id:content"|attr:"class:form-control"|attr:"placeholder:Add a Comment" }}
+                                    </p>
+                                    <p class="form-submit">
+                                        <input type="submit" value="Post Comment" class="submit" id="submit">
+                                    </p>
+                                </form>
+                            </div>
+                            <!-- Form END -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% else %}
+
+        <form  method="post"> {% csrf_token %}
+            <div class="form-group">
+                <label>Password <span class="text-danger">*</span></label>
+                <input type="password" name="password" class="form-control mb-3">
+                {% if message %}
+                <div class="text-danger mb-2">
+                    {{message}}
+                </div>
+                {% endif %}
+            </div>
+            <button class="btn btn-primary" type="submit">Submit form</button>
+        </form>
+
+    {% endif %}
+{% else %}
+<h3>Not Valid!!!</h3>
+<h4>{{message}}</h4>
+{% endif %}
+
+
+
+
+{% endblock %}
+
+{% block additional_js %}
+
+{% endblock %}

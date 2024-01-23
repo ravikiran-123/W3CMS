@@ -1,0 +1,86 @@
+{% extends 'theme5/elements/layouts/layout1.html' %}
+
+{% load static  %}
+
+{% block additional_css %}
+{% endblock %}
+
+
+
+
+{% block message %}
+{% comment %} {% include 'dashboard/elements/alert.html' %} {% endcomment %}
+{% endblock %}
+
+
+
+{% block content %}
+
+
+{% if blogs %}
+    {% for blog in blogs %}
+    <div class="blog-card blog-md m-b30">
+        <div class="blog-card-media dlab-post-media">
+            <a href="{% url 'frontend:blog-detail' slug=blog.slug %}" ><img src="/media/{{blog.feature_image}}" alt=""></a>
+        </div>
+        <div class="blog-card-info">
+            <div class="dlab-post-meta">
+                <ul>
+                    <li class="post-tag">
+                        {% if blog.categories.all %}
+                        {% for category in blog.categories.all %}
+                            <a href="{% url 'frontend:blogtag' slug=category.slug %}"> {{category.title}}.</a>
+                        {% endfor %}
+                        {% endif %} 
+                    <li class="post-date">{{blog.publish_on}}</li>
+                </ul>
+            </div>
+            <h2 class="title"><a href="{% url 'frontend:blog-detail' slug=blog.slug %}">{{blog.title}}</a></h2>
+            <p>{{ blog.excerpt|truncatechars:200 }}</p>
+            <ul class="add-info">
+                <li><a href="{% url 'frontend:blog-detail' slug=blog.slug %}" class="btn radius-no primary">Read More</a></li>
+            </ul>
+        </div>
+    </div>
+    {% endfor %}
+
+    <!-- Pagination -->
+    <div class="pagination-bx clearfix text-center">
+        <ul class="pagination">
+            {% if blogs.has_previous %}
+                <li>
+                    <a class="text-center" href="?page={{ blogs.previous_page_number }}"><i class="la la-chevron-left"></i></a>
+                </li>
+            {% endif %}
+            
+            {% for i in blogs.paginator.page_range %}
+                <li class="{% if blogs.number == i %}active{% endif %}">
+                    <a class="text-center" href="?page={{i}}">{{i}}</a>
+                </li>
+            {% endfor %}
+
+
+            {% if blogs.has_next %}
+                <li>
+                    <a class="text-center" href="?page={{ blogs.next_page_number }}"><i class="la la-chevron-right"></i></a>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+    <!-- Pagination END --> 
+
+{% else %}
+
+<h3>Not Found!</h3>
+
+{% endif %}
+
+		
+		
+
+
+{% endblock %}
+
+{% block additional_js %}
+
+{% endblock %}

@@ -1,0 +1,283 @@
+	{% extends 'dashboard/elements/layouts/admin.html' %}
+{% load static %}
+
+
+{% block additional_css %}
+ 
+{% endblock %}
+
+
+
+{% block message %}
+{% include 'dashboard/elements/alert.html' %}
+{% endblock %}
+
+
+{% block content %}
+
+<div id="message">
+</div>  
+
+
+<!-- Filter -->
+
+<div class="custome-accordion">
+    <div class="accordion" id="accordionUserFilter">
+        <div class="accordion-item card">
+            <h2 class="accordion-header border-0" id="headingOne">
+            <button class="accordion-button d-flex justify-content-between align-items-center " type="button" data-bs-toggle="collapse" data-bs-target="#collaps-user-filter" aria-expanded="true" aria-controls="collaps-user-filter">
+                    <span class="acc-heading">Filter</span>
+            </button>
+            </h2>
+            <div id="collaps-user-filter" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionUserFilter" style="">
+                <div class="accordion-body card-body pt-0">
+                <form action="{% url 'dashboard:users' %}" method="post" id="user-filter-form">{% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-lg-6 col-xl-3">
+									<div class="mb-3">
+                                        <input type="text"
+                                        name="filter-user-email"
+                                        class="form-control input-default"
+                                        placeholder="Email"
+                                        {% if form_data.filter_email %}
+                                        value="{{form_data.filter_email}}"
+                                        {% endif %}
+                                        >
+									</div>
+                                </div>
+                                <div class="col-lg-6 col-xl-3">
+									<div class="mb-3">
+                                        <input type="number"
+                                        name="filter-user-mobile"
+                                        class="form-control input-default"
+                                        placeholder="Mobile"
+                                        {% if form_data.filter_mobile %}
+                                        value="{{form_data.filter_mobile}}"
+                                        {% endif %}
+                                        >
+									</div>
+                                </div>
+                                <div class="col-lg-6 col-xl-3">
+									<div class="mb-3">
+										<select name="filter-user-group" class="default-select form-control wide mb-3">
+										  
+											<option value="">Select Group</option>
+											{% for group in groups %}
+											<option value="{{group.id}}" {% if group.id == form_data.filter_group %}selected{% endif %}>{{ group.name }}</option>
+											{% endfor %}
+										</select>
+									</div>
+                                </div>
+                                <div class="col-lg-6 col-xl-3">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <button type="submit" class="btn btn-primary w-100 mb-2"><i class="fa-solid fa-magnifying-glass me-1"></i>Filter</button>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <a href="javascript:void(0);" type="button" class="btn light btn-outline-primary clear-user-filter w-100">Clear</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+                
+                </div>
+            </div>  
+        </div>
+    </div>
+</div>
+
+
+<!--END Filter-->
+
+
+
+
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Users</h4>
+                    
+                    <div class="d-flex">
+
+                        {% if perms.users.delete_customuser %}
+                       
+                        <button type="button" id="delete_multiple_btn" data-url="{% url 'dashboard:delete-multiple-user' %}" class="btn light btn-outline-primary me-2 ">Delete</button>
+                        
+                        {% endif %}
+
+                        {% if perms.users.add_customuser %}
+                        <a href="{% url 'dashboard:add-user' %}" class="btn btn-primary">ADD USER <span class="btn-icon-end">
+                            <i class="fa fa-plus"></i></span>
+                        </a>
+                        {% endif %}
+
+                    </div>
+
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-responsive-md">
+                            <thead>
+                                <tr>
+                                    <th style="width:50px;">
+                                        <div class="form-check custom-checkbox checkbox-primary check-lg me-3">
+                                            <input  type="checkbox" class="form-check-input" id="checkAll" value="">
+                                            <label class="form-check-label" for="checkAll"></label>
+                                        </div>
+                                    </th>
+                                   
+                                    <th>Full Name</th>
+                                    <th>Email</th>
+                                    <th>Gender</th>
+                                    <th>Groups</th>
+                                    <th>Mobile</th>
+                                    <th>Date of Birth</th>
+                                    <th>Status</th>
+                                    
+
+
+                                    {% if perms.users.delete_customuser or perms.users.change_customuser or perms.auth.change_permission %}
+                                    <th>Action</th>
+                                    {% endif %}
+
+
+                                   
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% csrf_token %}
+                                {% for user in user_list %}
+                                <tr id="{{ user.id }}">
+                                    <td>
+                                        <div class="form-check custom-checkbox checkbox-primary check-lg me-3">
+                                            <input name="user_id[]" type="checkbox" class="form-check-input" value="{{ user.id }}">
+                                            <label class="form-check-label" for="checkbox-{{ user.id }}"></label>
+                                        </div>
+                                    </td>
+
+
+                                    <td>
+                                        <a href="{% url 'dashboard:user-details' id=user.id %}">
+                                        <div class="d-flex align-items-center">
+                                            <img src="/media/{{ user.avatar }}" class="rounded-lg me-2" width="24" alt=""> 
+                                            <span class="w-space-no">{{ user.first_name }} {{ user.last_name }}</span>
+                                        </div>
+                                    </a>
+                                    </td>
+                                    <td><strong>{{ user.email }}</strong></td>
+                                    <td>{{ user.gender }}</td>
+
+                                    <td>	
+                                        {% for g in user.groups.all %}
+                                        <span class="label label-primary">{{ g.name }}</span>
+                                        {% endfor %}
+                                    </td>
+                                    <td>{{ user.phone_number }}</td>
+                                    <td>{{ user.dob }}</td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            {% if user.is_active %}
+                                            <i class="fa fa-circle text-success me-1"></i> 
+                                            {% else %} 
+                                            <i class="fa fa-circle text-dark me-1"></i> 
+
+                                            {% endif %}
+                                        </div>
+                                    
+                                    </td>
+                                    <td>
+                                        <div class="sweetalert">
+                                            <div class="d-flex">
+                                                {% if perms.auth.change_permission %}
+                                                <a href="{% url 'dashboard:assign-permissions-to-user' id=user.id %}" class="btn btn-secondary shadow btn-xs sharp me-1" title="Permissions"><i class="fa fa-shield"></i></a>
+                                                {% endif %}
+                                                {% if perms.users.change_customuser %}
+                                                <a href="{% url 'dashboard:edit-user' id=user.id %}" class="btn btn-primary shadow btn-xs sharp me-1" title="Edit"><i class="fa fa-pencil"></i></a>
+                                                {% endif %}
+                                                {% if perms.users.delete_customuser %}
+                                                <a href="{% url 'dashboard:delete-user' id=user.id %}" class="btn btn-danger shadow btn-xs sharp sweet-success-cancel" title="Delete"><i class="fa fa-trash"></i></a>
+                                                {% endif %}
+                                            </div>
+                                    </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+
+                        <div class="text-primary d-flex justify-content-center">
+						{% if message  %}
+                            <h4>{{message}}</h4>
+						{% endif  %}
+                        </div>
+                    </div>
+
+                    {% if not message  %}
+                    <nav mt-5 class="d-flex align-items-center justify-content-between pt-3">
+
+                        <p>
+                            <span class="current">
+                            Page {{ user_list.number }} of {{ user_list.paginator.num_pages }}.
+                           </span> 
+                           </p>
+                           
+
+                        <ul class="pagination pagination-gutter">
+                            
+                                <li class="page-item page-indicator ">
+                                    <a class="page-link" href="{% if user_list.has_previous %}
+                                                                ?page={{ user_list.previous_page_number }}
+                                                                {% else %}
+                                                                javascript:void(0);
+                                                                {% endif %}">
+                                        <i class="la la-angle-left"></i></a>
+                                </li>
+
+                            {% for i in user_list.paginator.page_range|slice:":3" %}
+
+                                <li class="page-item {% if user_list.number == i %}
+                                                    active{% endif %}"><a class="page-link" href="?page={{i}}">{{i}}</a></li>
+                            
+                            {% endfor %}
+
+                            
+                            {% if user_list.number > 3 %}
+                            <li class="page-item active"><a class="page-link" href="?page={{ user_list.number }}">{{ user_list.number }}</a></li>
+                            {% endif %}
+                            
+                            <li class="page-item page-indicator ">
+                                <a class="page-link"  href="{% if user_list.has_next %}
+                                                            ?page={{ user_list.next_page_number }}
+                                                            {% else %}
+                                                            javascript:void(0);
+                                                            {% endif %}">
+                                    <i class="la la-angle-right"></i></a>
+                            </li>
+                            <li>
+
+                              
+
+                            </li>
+                        </ul>
+                       
+                    </nav>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+
+{% endblock %}
+
+
+{% block additional_js %}
+
+   
+{% endblock %}
+

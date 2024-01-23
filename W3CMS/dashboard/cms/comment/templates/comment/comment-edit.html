@@ -1,0 +1,109 @@
+{% extends 'dashboard/elements/layouts/admin.html' %}
+{% load static %}
+{% load mptt_tags %}
+{% load static widget_tweaks %}
+
+
+{% block additional_css %}
+ 
+{% endblock %}
+
+
+
+{% block message %}
+{% include 'dashboard/elements/alert.html' %}
+{% endblock %}
+
+
+{% block content %}
+
+<div id="message">
+</div>
+
+
+
+<form method="post" enctype="multipart/form-data" novalidate autocomplete="off" class="mb-5">
+<div class="row">
+        {% csrf_token %}
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Edit Comment</h4>
+                    
+                    <div class="d-flex">
+                    </div>
+        
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        {{ comment_form.parent|attr:"type:hidden"|attr:"id:comment_parent_id"}}
+                        <div class="col-md-6 mb-3">
+                            <label>Name</label>
+                            {{ comment_form.name|attr:"type:text"|attr:"id:id_name" |attr:"placeholder:Name" }}
+
+                        </div>
+                        <div class="col-md-6 mb-3">
+                                <label>Email</label>
+                                {{ comment_form.email|attr:"type:text"|attr:"id:id_email"|attr:"placeholder:Email" }}
+                                
+                                <div class="text-danger w-100 mt-1">
+                                    {{ comment_form.email.errors }}
+                                </div>
+                        </div>
+                        
+                        <div class="col-md-12 mb-3">
+                            <label>Comment</label>
+                            {{ comment_form.content|attr:"type:text"|attr:"id:id_content" |attr:"rows:5" |attr:"placeholder:Add a Comment" }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>	
+        <div class="col-md-4">
+            <div class="card h-auto">
+                <div class="card-header">
+                    <h4 class="card-title">Save Changes</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12 mb-5">
+                            <label class="form-label">Status</label>
+                            {{ comment_form.status|attr:"class:default-select form-control wide"|attr:"id:id_status"  }}
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <button type="submit" class="btn btn-primary">Update</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>	
+
+
+
+
+
+
+
+
+
+{% endblock %}
+
+
+{% block additional_js %}
+
+
+
+   
+{% endblock %}
+
+
+
+
+
+
+
+
+
+

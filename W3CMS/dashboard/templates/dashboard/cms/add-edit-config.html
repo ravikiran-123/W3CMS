@@ -1,0 +1,125 @@
+{% extends 'dashboard/elements/layouts/admin.html' %}
+
+{% load static widget_tweaks %}
+
+{% block additional_css %}
+{% endblock %}
+
+{% block message %}
+{% include 'dashboard/elements/alert.html' %}
+{% endblock %}
+
+
+{% block content %}
+
+
+
+
+
+
+<div class="row page-titles mx-0 mb-3">
+    <div class="col-sm-6 p-md-0">
+        <div class="welcome-text">
+            <h4>Configurations</h4>
+            <span>all configurations</span>
+        </div>
+    </div>
+    {% if perms.dashboard.view_configurations or perms.dashboard.add_configurations %}
+    <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
+        <ol class="breadcrumb">
+            {% if perms.dashboard.view_configurations %}
+            <li class="breadcrumb-item"><a href="{% url 'dashboard:all-config' %}">Configurations</a></li>
+            {% endif %}
+            {% if perms.dashboard.add_configurations %}
+            <li class="breadcrumb-item active"><a href="{% url 'dashboard:add-config' %}">Add Config</a></li>
+            {% endif %}
+        </ol>
+    </div>
+    {% endif %}
+</div>
+
+
+
+<div class="card">
+    <div class="card-header ">
+        <h4 class="card-title">Add Configurations</h4>
+    </div>
+    <div class="card-body pt-0">
+ 
+        <div class="default-tab mt-4">
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" data-bs-toggle="tab" href="#setting"><i class="la la-cog me-2"></i> Settings</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-bs-toggle="tab" href="#misc"><i class="la la-puzzle-piece me-2"></i> Misc</a>
+                </li>
+               
+            </ul>
+            <form  method="post" autocomplete="off">{%csrf_token%}
+            <div class="tab-content">
+
+
+               
+
+                    <div class="tab-pane fade active show" id="setting" role="tabpanel">
+                        <div class="row mt-4">
+                            <div class="col-md-6 mb-3">
+                                <label>{{config_form.name.label}}</label>
+                                {{ config_form.name|attr:"type:text"|attr:"class:form-control input-default" }}
+                            <div class="text-muted mt-2">
+                                <p>e.g., 'Site.name'</p>
+                            </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label>{{config_form.value.label}}</label>
+                                {{ config_form.value|attr:"rows:3"|attr:"class:form-control input-default" }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane fade" id="misc">
+                        <div class="row mt-4">
+                            <div class="col-md-6 mb-3">
+                                <label>{{config_form.title.label}}</label>
+                                {{ config_form.title|attr:"type:text"|attr:"class:form-control input-default" }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label>{{config_form.input_type.label}}</label>
+                                {{ config_form.input_type|attr:"class:default-select form-control wide" }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label>{{config_form.description.label}}</label>
+                                {{ config_form.description|attr:"class:form-control"|attr:"rows:3"|attr:"cols:10" }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label>{{config_form.params.label}}</label>
+                                {{ config_form.params|attr:"class:form-control"|attr:"rows:3"|attr:"cols:10" }}
+                            </div>
+
+
+                            <div class="col-md-12 mb-3">
+                                                          
+                                <div class="form-check">
+                                    {{ config_form.editable|attr:"class:form-check-input"|attr:"type:checkbox" }}
+                                    <label class="form-check-label" for="flexCheckDefault">
+                                    {{ config_form.editable.label}}
+                                    </label>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-4">Save</button>
+            
+            </div>
+        </form>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block additional_js %}
+
+{% endblock %}

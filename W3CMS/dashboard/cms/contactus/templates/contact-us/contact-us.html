@@ -1,0 +1,315 @@
+{% extends 'dashboard/elements/layouts/admin.html' %}
+
+{% load static widget_tweaks %}
+
+{% block additional_css %}
+{% endblock %}
+
+
+
+{% block message %}
+{% include 'dashboard/elements/alert.html' %}
+{% endblock %}
+
+{% block content %}
+
+       
+       
+
+
+<div id="message">
+</div>
+
+
+
+
+<!-- Filter -->
+
+<div class="custome-accordion">
+    <div class="accordion" id="accordionSubscriberFilter">
+        <div class="accordion-item card">
+            <h2 class="accordion-header border-0" id="headingOne">
+            <button class="accordion-button d-flex justify-content-between align-items-center collapsed " type="button" data-bs-toggle="collapse" data-bs-target="#collaps-page-filter" aria-expanded="false" aria-controls="collaps-page-filter">
+                    <span class="acc-heading">Filter</span>
+            </button>
+            </h2>
+            <div id="collaps-page-filter" class="accordion-collapse collapse " aria-labelledby="headingOne" data-bs-parent="#accordionSubscriberFilter" style="">
+                <div class="accordion-body card-body pt-0">
+                <form action="{% url 'dashboard:contactus:contact-us' %}" method="post" >
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-lg-6 col-xl-3">
+                                    <div class="mb-3">
+                                      
+                                        <input type="text"
+                                        name="filter-contactus-name"
+                                        class="form-control input-default"
+                                        placeholder="Name"
+                                        {% if form_data.filter_name %}
+                                        value="{{form_data.filter_name}}"
+                                        {% endif %}
+                                        >
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6 col-xl-3">
+                                    <div class="mb-3">
+                                       
+                                        <input type="text" 
+                                            name="filter-contactus-email" 
+                                            class="form-control input-default"
+                                            placeholder="email"
+                                            {% if form_data.filter_email %}
+                                            value="{{form_data.filter_email}}"
+                                            {% endif %}
+                                            >
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-xl-3">
+                                    <div class="mb-3">
+                                       
+                                        <input type="text" 
+                                                name="filter-contactus-phone" 
+                                                class="form-control input-default"
+                                                placeholder="Phone"
+                                                {% if form_data.filter_phone %}
+                                                value="{{form_data.filter_phone}}"
+                                                {% endif %}
+                                                >
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-xl-3">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <button type="submit" class="btn btn-primary w-100 mb-3"><i class="fa-solid fa-magnifying-glass me-1"></i>Filter</button>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <a href="javascript:void(0);" type="button" class="btn light btn-outline-primary  w-100 clear-contactus-filter">Clear</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+                
+                </div>
+            </div>  
+        </div>
+    </div>
+</div>
+
+<!--END Filter-->
+
+
+
+
+
+
+<!-- Add Contactus -->
+
+{% if add_edit_view %}
+
+<div class="custome-accordion">
+    <div class="accordion" id="accordionAddSubscriber">
+        <div class="accordion-item card">
+            <h2 class="accordion-header border-0" id="headingOne">
+            <button class="accordion-button d-flex justify-content-between align-items-center {% if not edit %}collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#collaps-add-subscriber" aria-expanded="{% if edit %}true {% else %} false{% endif %}" aria-controls="collaps-add-subscriber">
+                    <span class="acc-heading">{%if edit %}Edit{% else %}Add{% endif %} Contact</span>
+            </button>
+            </h2>
+            <div id="collaps-add-subscriber" class="accordion-collapse collapse {%if edit %}show{% endif %}" aria-labelledby="headingOne" data-bs-parent="#accordionAddSubscriber" style="">
+                <div class="accordion-body card-body pt-0">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                               
+                               <div class="col-md-4 mb-3">
+                                <label>Name</label>
+                                {{ contact_form.name|attr:"type:text"|attr:"class:form-control"|attr:"placeholder:Name"}}
+
+                               </div>
+                               <div class="col-md-4 mb-3">
+                                    <label>Email</label>
+                                    {{ contact_form.email|attr:"class:form-control"|attr:"placeholder:Email"}}
+                                    
+                                    <div class="text-danger w-100 mt-1">
+                                        {{ contact_form.email.errors }}
+                                    </div>
+
+                               </div>
+                               <div class="col-md-4 mb-3">
+                                <label>Phone</label>
+                                {{ contact_form.phone|attr:"type:text"|attr:"class:form-control"|attr:"placeholder:Phone"}}
+                               </div>
+                               
+                               <div class="col-md-4 mb-3">
+                                <label>Message</label>
+                                {{ contact_form.message|attr:"class:form-control"|attr:"rows:3"}}
+                               </div>
+                               
+                              
+                               
+                                
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+                
+                </div>
+            </div>  
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!--END Contactus-->
+
+
+
+<div class="col-lg-12">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">All Contacts</h4>
+            
+            
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-responsive-md">
+                    <thead>
+                        <tr>
+
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Message</th>
+                                {% if  perms.contactus.view_contactus or perms.contactus.change_contactus or perms.contactus.delete_contactus %} 
+                                    <th>Action</th>
+                                {% endif %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                       
+                        {% for contact in contact_list %}
+                        <tr>
+                            <td>{{contact.name}}</td>
+                            <td>{{contact.email}}</td>
+                            <td>{{contact.phone}}</td>
+                            <td>{{contact.message|truncatechars:30}}</td>
+                          
+        
+        
+                        {% if  perms.contactus.view_contactus or perms.contactus.change_contactus or perms.contactus.delete_contactus %} 
+                            <td>
+                                <div class="sweetalert">
+                                    <div class="d-flex">
+                                        {% if  perms.contactus.view_contactus %} 
+                                        <a  class="btn btn-primary shadow btn-xs sharp me-1 contactus-modal" rel="{{contact.id}}" title="View"><i class="fa fa-eye"></i></a>
+                                        {% endif %}
+                                        {% if  perms.contactus.change_contactus %} 
+                                        <a href="{% url "dashboard:contactus:edit-contact-us" id=contact.id %}" class="btn btn-primary shadow btn-xs sharp me-1" title="Edit"><i class="fa fa-pencil"></i></a>
+                                        {% endif %}
+                                        {% if  perms.contactus.delete_contactus %}
+                                        <a href="{% url 'dashboard:contactus:delete-contact-us' id=contact.id %}" class="btn btn-danger shadow btn-xs sharp sweet-success-cancel" title="Delete"><i class="fa fa-trash"></i></a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </td>
+                            {% endif %}
+                        </tr>
+                        {% endfor %}
+                           
+                    </tbody>
+                </table>
+            </div>
+
+
+           <nav mt-5 class="d-flex align-items-center justify-content-between pt-3">
+
+                <p>
+                <span class="current">
+                Page {{ contact_list.number }} of {{ contact_list.paginator.num_pages }}.
+                </span> 
+                </p>
+                    
+
+                <ul class="pagination pagination-gutter  justify-content-end">
+                    
+                        <li class="page-item page-indicator ">
+                            <a class="page-link" href="{% if contact_list.has_previous %}
+                                                        ?page={{ contact_list.previous_page_number }}
+                                                        {% else %}
+                                                        javascript:void(0);
+                                                        {% endif %}">
+                                <i class="la la-angle-left"></i></a>
+                        </li>
+
+                    {% for i in contact_list.paginator.page_range|slice:":3" %}
+
+                        <li class="page-item {% if contact_list.number == i %}
+                                            active{% endif %}"><a class="page-link" href="?page={{i}}">{{i}}</a></li>
+                    
+                    {% endfor %}
+
+                    
+                    {% if contact_list.number > 3 %}
+                    <li class="page-item active"><a class="page-link" href="?page={{ contact_list.number }}">{{ contact_list.number }}</a></li>
+                    {% endif %}
+                    
+                    <li class="page-item page-indicator ">
+                        <a class="page-link"  href="{% if contact_list.has_next %}
+                                                    ?page={{ contact_list.next_page_number }}
+                                                    {% else %}
+                                                    javascript:void(0);
+                                                    {% endif %}">
+                            <i class="la la-angle-right"></i></a>
+                    </li>
+
+                </ul>
+            </nav> 
+
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="ContactPersonMessage">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Contact Info</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal">
+                </button>
+            </div>
+            <div class="modal-body contact-modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger light" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Button trigger modal -->
+
+
+
+
+{% endblock %}
+
+{% block additional_js %}
+
+
+
+{% endblock %}

@@ -1,0 +1,152 @@
+{% load i18n %}
+{% load static custom_tags %}
+
+<div class="dlabnav">
+    <div class="dlabnav-scroll">
+        <ul class="metismenu" id="menu">
+            {% if perms.users.view_customuser or perms.auth.view_group or perms.auth.view_permission %} 
+                <li>
+                    <a class="has-arrow " href="javascript:void(0);" aria-expanded="false">
+                        <i class="bi bi-person"></i>
+                        <span class="nav-text">{% translate 'User' %}<span class="badge light badge-sm badge-primary ms-2 mb-0">{% translate 'Modules'%}</span></span>
+                        
+                        <!-- <span class="badge badge-xs  ms-1" style="background-color: #e9f542; color:#ff6a59;">New</span> -->
+                    </a>
+                    <ul aria-expanded="false">
+
+                        {% if perms.users.view_customuser or perms.users.change_customuser or perms.users.add_customuser or perms.users.delete_customuser %}
+                        <li><a href="{% url 'dashboard:users' %}">{% translate 'Users' %}</a></li>
+                        {% endif %}
+                        {% if perms.auth.view_group or perms.auth.change_group or perms.auth.add_group or perms.auth.delete_group %}
+                        <li><a href="{% url 'dashboard:groups' %}">{% trans 'Groups' %}</a></li>
+                        {% endif %}
+                        {% if perms.auth.view_permission or perms.auth.change_permission or perms.auth.add_permission or  perms.auth.delete_permission%}
+                        <li><a href="{% url 'dashboard:permissions' %}">{% translate 'Permissions' %}</a></li>
+                        {% endif %}
+                    </ul>
+                </li>
+            {% endif %}
+
+            {% if perms.pages.view_page or perms.blog.view_blogs or perms.menu.view_menus or perms.blog.view_comment or perms.blog.view_categories or perms.blog.view_tags or perms.contactus.view_contactus or perms.subscribe.view_subscribers %} 
+            <li>
+                <a class="has-arrow " href="javascript:void(0);" aria-expanded="false">
+                    <i class="bi bi-box-seam"></i>
+                    <span class="nav-text">{% translate 'CMS' %}<span class="badge light badge-sm badge-primary ms-2 mb-0">{% translate 'Modules'%}</span></span>
+                </a>
+            
+                <ul aria-expanded="false">
+                    {% if perms.pages.view_page or perms.pages.change_page or perms.pages.add_page or perms.pages.delete_page %}
+                    <li><a href="{% url 'dashboard:pages:pages' %}">{% translate 'Page' %}</a></li>
+                    {% endif %}
+                    {% if perms.blog.view_blogs or perms.blog.view_categories or perms.blog.view_tags  %}
+                        <li><a class="has-arrow" href="javascript:void(0);" aria-expanded="false">{% translate 'Blog' %} </a>
+                            <ul aria-expanded="false">
+                                {% if perms.blog.view_blogs %}
+                                <li><a href="{% url 'dashboard:blog:blogs' %}">{% translate 'Blogs'%}</a></li>
+                                {% endif %}
+                                {% if perms.blog.view_categories %}
+                                <li><a href="{% url 'dashboard:blog:blogCategory' %}">{% translate 'Categories'%}</a></li>
+                                {% endif %}
+                                {% if perms.blog.view_tags %}
+                                <li><a href="{% url 'dashboard:blog:blogTag' %}">{% translate 'Tags' %}</a></li>
+                                {% endif %}
+                            
+                            </ul>
+                        </li>
+                    {% endif %}
+                    
+                    {% if perms.comment.view_comment %}
+                    <li><a href="{% url 'dashboard:comment:comments' %}">{% translate 'Comment' %}</a></li>
+                    {% endif %}
+
+                    {% if perms.menu.view_menus or perms.menu.change_menus or perms.menu.add_menus or perms.menu.delete_menus %}
+                    <li><a href="{% url 'dashboard:menu:setup' %}">{% translate 'Menu Setup' %}</a></li>
+                    {% endif %}
+
+
+                    {% if perms.subscribe.view_subscribes or perms.subscribe.change_subscribes or perms.subscribe.add_subscribes or perms.subscribe.delete_subscribes %}
+                    <li><a href="{% url 'dashboard:subscribe:subscribers' %}">{% translate 'Subscribers' %}</a></li>
+                    {% endif %}
+
+
+                    {% if perms.contactus.view_contactus or perms.contactus.change_contactus or perms.contactus.add_contactus or perms.contactus.delete_contactus %}
+                    <li><a href="{% url 'dashboard:contactus:contact-us' %}">{% translate 'Contact Us' %}</a></li>
+                    {% endif %}
+                
+                </ul>
+
+            </li>
+            {% endif %} 
+
+
+
+        {% if perms.dashboard.view_configurations or perms.dashboard.change_configurations or perms.dashboard.add_configurations or perms.dashboard.delete_configurations %}
+            <li>
+                <a class="has-arrow " href="javascript:void(0);" aria-expanded="false">
+                    <i class="bi bi-gear"></i>
+                    <span class="nav-text">{% translate 'Config' %}<span class="badge light badge-sm badge-primary ms-2 mb-0">{% translate 'Modules'%}</span></span>
+                    
+                </a>
+                <ul aria-expanded="false">
+                    {% for prefix in ''|getAllprefix %}
+                    <li><a href="{% url 'dashboard:filter-config' prefix=prefix %}">{{prefix}}</a></li>
+                    {% endfor %}
+                    <li><a href="{% url 'dashboard:all-config' %}">{% translate 'Configurations' %}</a></li>
+                </ul>
+            </li>
+        {% endif %}
+
+
+
+
+            <li><a class="has-arrow " href="javascript:void(0);" aria-expanded="false">
+                    <i class="bi bi-grid"></i>
+                    <span class="nav-text">{% translate 'Dashboard' %}</span>
+                </a>
+                <ul aria-expanded="false">
+                    <li><a href="{% url 'dashboard:index' %}">{% translate 'Dashboard Light' %}</a></li>
+                    <li><a href="{% url 'dashboard:index-2' %}">{% translate 'Dashboard Dark' %}</a></li>
+                    <li><a href="{% url 'dashboard:schedule' %}">{% translate 'Schedule' %}</a></li>
+                    <li><a href="{% url 'dashboard:instructors' %}">{% translate 'Instructors' %}</a></li>
+                    <li><a href="{% url 'dashboard:message' %}">{% translate 'Message' %}</a></li>	
+                    <li><a href="{% url 'dashboard:activity' %}">{% translate 'Activity' %}</a></li>	
+                    <li><a href="{% url 'dashboard:profile' %}">{% translate 'Profile' %}</a></li>	
+                </ul>
+            </li>
+
+
+
+ 
+            <li><a class="has-arrow " href="javascript:void(0);" aria-expanded="false">
+                    <i class="bi bi-star"></i>
+                <span class="nav-text">{% translate 'Bootstrap' %}</span>
+                </a>
+                <ul aria-expanded="false">
+                    <li><a href="{% url 'dashboard:ui-accordion' %}">{% translate 'Accordion'%}</a></li>
+                    <li><a href="{% url 'dashboard:ui-alert' %}">{% translate 'Alert'%}</a></li>
+                    <li><a href="{% url 'dashboard:ui-badge' %}">{% translate 'Badge'%}</a></li>
+                    <li><a href="{% url 'dashboard:ui-button' %}">{% translate 'Button'%}</a></li>
+                    <li><a href="{% url 'dashboard:ui-modal' %}">{% translate 'Modal'%}</a></li>
+                    <li><a href="{% url 'dashboard:ui-button-group' %}">{% translate 'Button Group'%}</a></li>
+                    <li><a href="{% url 'dashboard:ui-list-group' %}">{% translate 'List Group'%}</a></li>
+                    <li><a href="{% url 'dashboard:ui-card' %}">{% translate 'Cards'%}</a></li>
+                    <li><a href="{% url 'dashboard:ui-carousel' %}">{% translate 'Carousel'%}</a></li>
+                    <li><a href="{% url 'dashboard:ui-dropdown' %}">{% translate 'Dropdown'%}</a></li>
+                    <li><a href="{% url 'dashboard:ui-popover' %}">{% translate 'Popover'%}</a></li>
+                    <li><a href="{% url 'dashboard:ui-progressbar' %}">{% translate 'Progressbar'%}</a></li>
+                    <li><a href="{% url 'dashboard:ui-tab' %}">{% translate 'Tab'%}</a></li>
+                    <li><a href="{% url 'dashboard:ui-typography' %}">{% translate 'Typography'%}</a></li>
+                    <li><a href="{% url 'dashboard:ui-pagination' %}">{% translate 'Pagination'%}</a></li>
+                    <li><a href="{% url 'dashboard:ui-grid' %}">{% translate 'Grid'%}</a></li>
+
+                </ul>
+            </li>
+
+        </ul>
+
+        <div class="copyright mt-2">
+          
+            <p class="fs-12 text-center">Made with <span class="heart"></span> by Appstack</p>
+        </div>
+    </div>
+</div>

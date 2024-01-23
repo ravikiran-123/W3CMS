@@ -1,0 +1,331 @@
+
+{% extends 'theme5/elements/layouts/layout3.html' %}
+
+{% include 'theme5/elements/footer.html' %}
+
+{% include 'theme5/elements/layouts/layout1.html' %}
+
+
+{% load static custom_tags %}
+
+
+{% load static  %}
+
+
+{% block additional_css %}
+{% endblock %}
+
+
+
+
+{% block message %}
+{% comment %} {% include 'dashboard/elements/alert.html' %} {% endcomment %}
+{% endblock %}
+
+
+
+{% block content %}
+
+
+
+<div class="section-full blog-full-bx" style="background-image: url(/static/theme5/images/background/bg1.jp); background-size: cover;">
+    <div class="container">
+    <div class="blog-slider-full bg-dark owl-carousel owl-btn-center-lr">
+    {% for slider in sliders  %}
+    <div class="item">
+    <div class="blog-slider-box">
+    <!-- <div class="post-date">23 <span>02 </span> 2023</div> -->
+    <div class="post-thumb"><img alt="" src="{{slider.slider_image.url}}" /></div>
+    <h2 class="title"><a href="#"></a></h2>
+    </div>
+    </div>
+    {% endfor %}
+</div>
+</div>
+</div>
+
+<div class="section-full bg-white content-inner-1">
+    <div class="container-fluid">
+        <div class="section-head text-center">
+            <h4 class="title text-uppercase">Trending Reels</h4>
+            <div class="title-separate">&nbsp;</div>
+        </div>
+
+        <div class="trending-post-bx owl-carousel owl-btn-center-lr">
+            {% for video in videos %}
+            <div class="item">
+                <div class="trending-post text-center">
+                    <div class="trending-media">
+                        <a href="{{ video.video_file.url }}"><video width="200" height="400" muted onmouseover="this.play()" onmouseout="this.pause()">
+                            <source src="{{ video.video_file.url }}" type="video/mp4">
+                        </video></a>
+                        <p>{{ video.title }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+
+
+<div class="section-full bg-white content-inner-2">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-md-7 col-sm-12 col-12">
+                <div class="row">
+                    {% if blogs %}  
+                        {% for blog in blogs %}
+                            <div class="col-lg-6 m-b30">
+                                <div class="blog-card blog-grid blog-full bg-dark">
+                                    <div class="blog-card-media"><a href="{% url 'frontend:blog-detail' slug=blog.slug %}" ><img src="/media/{{ blog.feature_image }}" alt=""></a></div>
+                                    <div class="dlab-post-meta">
+                                        <ul>
+                                            <li class="post-tag">
+                                                {% if blog.categories.all %}
+                                                    {% for category in blog.categories.all %}
+                                                        <a href="{% url 'frontend:blogtag' slug=category.slug %}"> {{ category.title }}.</a>
+                                                    {% endfor %}
+                                                {% endif %} 
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="blog-card-info text-center">
+                                        <h2 class="title"><a href="{% url 'frontend:blog-detail' slug=blog.slug %}">{{ blog.title }}</a></h2>
+                                        <div class="post-date">{{ blog.publish_on }}</div>
+                                        <ul class="add-info">
+                                           
+                                            <li><a class="btn outline radius-no white" href="{% url 'frontend:blog-detail' slug=blog.slug %}">Read More</a></li>
+                                           
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <h3>No blogs found!</h3>
+                    {% endif %}
+                </div>
+            </div>
+            {% if site_config.Widget.show_sidebar.value == '1' %}
+                    <div class="col-lg-4 col-md-5 col-sm-12 col-12">
+						<aside class="side-bar p-l20 m-b30 sticky-top">
+							<!--Side Widget Start-->
+
+							{% if site_config.Widget.show_search_widget.value == '1' %}
+							<div class="widget">
+								<div class="news-box text-center">
+									<h6 class="widget-title">Search</h6>
+									<div class="search-bx">
+										<form role="search" action="{% url 'frontend:home_slider'  %}" >
+											<div class="input-group">
+												<input name="search" class="form-control" placeholder="Search Here..." type="text" {% if query %}value="{{query}}"{% endif %}>
+												
+												<span class="input-group-append">
+													<button type="submit" class="btn"><i class="fa fa-search"></i></button>
+												</span> 
+											</div>
+										</form>
+									</div>
+								</div>
+							</div>
+							{% endif %}
+							
+							{% if site_config.Widget.show_recent_post_widget.value == '1' %}
+							<div class="widget recent-posts-entry">
+								<h5 class="widget-title">Recent Posts</h5>
+								<div class="widget-post-bx">
+
+									{% with widget_blogs='3'|getRecentPOST  %}
+									{% for post in widget_blogs %}
+									<div class="widget-post clearfix">
+										<div class="dlab-post-media">
+											<img src="/media/{{post.feature_image}}" alt="">
+										</div>
+										<div class="dlab-post-info">
+											<div class="dlab-post-header">
+												<h5 class="post-title"><a href="{% url 'frontend:blog-detail' slug=post.slug %}">{{post.title|truncatechars:35 }}</a></h5>
+												<div class="post-date">{{post.publish_on}}</div>
+											</div>
+										</div>
+									</div>
+									{% endfor %}
+									{% endwith %}
+								</div>
+							</div>
+							{% endif %}
+						
+
+							<!--Archives Start-->
+							{% if site_config.Widget.show_archive_widget.value == '1' %}
+							<div class="widget widget_categories">
+								<h5 class="widget-title">Archive</h5>
+								<ul>
+									{% with archives=''|getWidgetArchives %}
+										{% for item in archives %}
+										<li class="cat-item">
+											<a href="{% url 'frontend:archive' year=item.year month=item.month %}">
+												{{ item|date:"F Y" }}
+											</a>&nbsp;
+										</li>
+										
+										{% endfor %}
+                         
+									{% endwith %}
+								</ul>
+							</div>
+							{% endif %}
+							<!--Archives End-->
+
+							
+							{% if site_config.Widget.show_tag_widget.value == '1' %}
+							<div class="widget widget_tag_cloud">
+								<h5 class="widget-title">All Tags</h5>
+								<div class="tagcloud"> 
+									{% for tag in ''|getPopularTags %}
+									<a href="{% url 'frontend:blogtag' slug=tag.slug %}">{{tag.name}}</a>
+									{% endfor %}
+								</div>
+							</div>
+							{% endif %}
+							<!--Side Widget End-->
+							
+						</aside>
+					</div>
+					{% endif %}
+
+        </div>
+    </div>
+</div>
+
+<div class="section-full bg-white content-inner-2">
+    <div class="container">
+    <div class="row">
+    <div class="col-lg-8 col-md-7 col-sm-12 col-12">
+    <div class="row loadmore-content">
+    <div class="col-lg-6 m-b30">
+    <div class="blog-card blog-grid bg-dark">
+    <div class="blog-card-media"><img alt="" src="/static/theme5/images/blog/blog-md/pic12.jpg" /></div>
+    
+    <div class="blog-card-info text-center">
+    <h2 class="title"><a href="https://timesofagriculture.in/terrace-farming-in-india-step-farming-india/">Cereal</a></h2>
+    
+    <!-- <div class="post-date">23 <span>02 </span> 2023</div> -->
+    
+    <ul class="add-info">
+        <li><a href="javascript:void(0);"><span>9</span></a></li>
+        <li><a class="btn outline radius-no white" href="https://timesofagriculture.in/terrace-farming-in-india-step-farming-india/">Read More</a></li>
+        <li><a href="javascript:void(0);"><span>3</span></a></li>
+    </ul>
+    </div>
+    </div>
+    </div>
+    
+    <div class="col-lg-6 m-b30">
+    <div class="blog-card blog-grid bg-dark">
+    <div class="blog-card-media"><img alt="" src="/static/theme5/images/blog/blog-md/pic10.jpg" /></div>
+    
+    <div class="blog-card-info text-center">
+    <h2 class="title"><a href="blogs/list=true/">Wheat</a></h2>
+    
+    <!-- <div class="post-date">23 <span>02 </span> 2023</div> -->
+    
+    <ul class="add-info">
+        <li><a href="javascript:void(0);"><span>9</span></a></li>
+        <li><a class="btn outline radius-no white" href="blogs/list=true/">Read More</a></li>
+        <li><a href="javascript:void(0);"><span>3</span></a></li>
+    </ul>
+    </div>
+    </div>
+    </div>
+    
+ 
+    
+ 
+    </div>
+    
+    <div class="row clearfix">
+    <div class="col-lg-12 m-t10">
+    <div class="text-center m-b30">&nbsp;</div>
+    </div>
+    </div>
+    </div>
+    
+    <div class="col-lg-4 col-md-5 col-sm-12 col-12">
+    <div class="side-bar p-l20 m-b30 sticky-top">
+    <div class="widget widget-newsletter">
+    <div class="news-box text-center">
+    <form class="dzSubscribe" method="post">
+    <h6>Want More?</h6>
+    
+    <p>The development of agriculture enabled the human population.</p>
+    
+    <div class="input-group"><input class="form-control" name="dzEmail" placeholder="Your Email" required="required" type="email" />
+    <div class="input-group-append"><button class="btn" name="submit" type="submit" value="Submit"></button></div>
+    
+    <div class="dzSubscribeMsg">&nbsp;</div>
+    </div>
+    </form>
+    </div>
+    </div>
+    
+    <!-- <div class="widget widget_categories">
+    <h6 class="widget-title">Category</h6>
+    
+    <ul>
+        <li><a href="javascript:void(0);">Beauty </a> 15</li>
+        <li><a href="javascript:void(0);">Travel </a> 17</li>
+        <li><a href="javascript:void(0);">Lifestyle </a> 18</li>
+        <li><a href="javascript:void(0);">Fashion </a> 9</li>
+    </ul>
+    </div> -->
+    
+    <div class="widget widget_mailbox">
+    <div class="mailbox" style="background-image: url(/static/theme5/images/background/img3.jpg); background-size: cover; background-position: center;"><a class="btn radius-no btn-block primary" href="javascript:void(0);">fop.com</a></div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+
+
+
+
+ <!-- Pagination -->
+ <div class="pagination-bx clearfix text-center">
+    <ul class="pagination">
+        {% if blogs.has_previous %}
+            <li>
+                <a class="text-center" href="?page={{ blogs.previous_page_number }}"><i class="la la-chevron-left"></i></a>
+            </li>
+        {% endif %}
+        
+        {% for i in blogs.paginator.page_range %}
+            <li class="{% if blogs.number == i %}active{% endif %}">
+                <a class="text-center" href="?page={{i}}">{{i}}</a>
+            </li>
+        {% endfor %}
+
+
+        {% if blogs.has_next %}
+            <li>
+                <a class="text-center" href="?page={{ blogs.next_page_number }}"><i class="la la-chevron-right"></i></a>
+            </li>
+        {% endif %}
+    </ul>
+</div>
+<!-- Pagination END --> 
+
+
+
+    
+    
+
+
+{% endblock %}
+
+{% block additional_js %}
+
+{% endblock %}

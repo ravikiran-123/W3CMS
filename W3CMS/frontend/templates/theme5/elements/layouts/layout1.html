@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	
+	<!-- Meta -->
+	{% load static mptt_tags custom_tags  %}
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="keywords" content=""/>
+	<meta name="author" content=""/>
+	<meta name="robots" content=""/>
+	<meta name="description" content="{{ dz_array.pagelevel.frontend.public.description }}" />
+	<meta property="og:title" content="{{ dz_array.pagelevel.frontend.public.og_title }}" />
+	<meta property="og:description" content="{{ dz_array.pagelevel.frontend.public.og_description }}" />
+	<meta property="og:image" content="{{ dz_array.pagelevel.frontend.public.og_image }}" />
+	<meta name="format-detection" content="telephone=no">
+	
+	<!-- Mobile Specific -->
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	<!-- Title -->
+	<title>{{ site_config.Site.title.value }}</title>
+    
+	<!-- Favicon icon -->
+    <link rel="icon" type="image/png" href="{{ site_config.Site.favicon.value }}">
+
+
+
+
+	{% for cssurl in dz_array.pagelevel.frontend.global.css.theme5 %}
+    <link  rel="stylesheet" href="{% static cssurl %}" >
+	{% endfor %}
+
+	<link  rel="stylesheet"  class="skin" href="{% static 'theme5/css/skin/skin-1.css' %}">
+	
+	
+</head>
+<body id="bg">
+	<div class="page-wraper">
+	<div id="loading-area"></div>
+	<!-- Header -->
+	{% include 'theme5/elements/header.html' %}
+	<!-- Header End -->
+	
+
+	
+	<div class="page-content bg-white">
+		
+		{% block message %}
+		{% endblock %}
+
+		<div class="dlab-bnr-inr dlab-bnr-inr-sm overlay-black-middle bg-pt" style="background-image:url(/static/theme5/images/blog/blog-md/pic13.jpg);">
+			<div class="container">
+				<div class="dlab-bnr-inr-entry">
+					<h1 class="text-white">{{banner_title}}</h1>
+					{% if sub_banner_title %}
+					<h2 class="text-white">{{sub_banner_title}}</h2>
+					{% endif %} 
+				</div>
+			</div>
+		</div>
+		
+		<!-- Banner End -->
+        <section class="content-inner pb-0">
+			<div class="container">
+				<div class="row">
+					<div
+					{% if site_config.Widget.show_sidebar.value == '1' %}
+					class="col-lg-8 col-md-7 col-sm-12 col-12 m-b40"
+					{% else %}
+					class="col-xl-12 col-lg-12 m-b40"
+					{% endif %}
+					>
+                        {% block content %}
+                        {% endblock %}
+                    </div>
+					{% if site_config.Widget.show_sidebar.value == '1' %}
+                    <div class="col-lg-4 col-md-5 col-sm-12 col-12">
+						<aside class="side-bar p-l20 m-b30 sticky-top">
+							<!--Side Widget Start-->
+
+							{% if site_config.Widget.show_search_widget.value == '1' %}
+							<div class="widget">
+								<div class="news-box text-center">
+									<h6 class="widget-title">Search</h6>
+									<div class="search-bx">
+										<form role="search" action="{% url 'frontend:home'  %}" >
+											<div class="input-group">
+												<input name="search" class="form-control" placeholder="Search Here..." type="text" {% if query %}value="{{query}}"{% endif %}>
+												
+												<span class="input-group-append">
+													<button type="submit" class="btn"><i class="fa fa-search"></i></button>
+												</span> 
+											</div>
+										</form>
+									</div>
+								</div>
+							</div>
+							{% endif %}
+							
+							{% if site_config.Widget.show_recent_post_widget.value == '1' %}
+							<div class="widget recent-posts-entry">
+								<h5 class="widget-title">Recent Posts</h5>
+								<div class="widget-post-bx">
+
+									{% with widget_blogs='3'|getRecentPOST  %}
+									{% for post in widget_blogs %}
+									<div class="widget-post clearfix">
+										<div class="dlab-post-media">
+											<img src="/media/{{post.feature_image}}" alt="">
+										</div>
+										<div class="dlab-post-info">
+											<div class="dlab-post-header">
+												<h5 class="post-title"><a href="{% url 'frontend:blog-detail' slug=post.slug %}">{{post.title|truncatechars:35 }}</a></h5>
+												<div class="post-date">{{post.publish_on}}</div>
+											</div>
+										</div>
+									</div>
+									{% endfor %}
+									{% endwith %}
+								</div>
+							</div>
+							{% endif %}
+							
+							{% if site_config.Widget.show_category_widget.value == '1' %}
+							<div class="widget widget_categories">
+								<h5 class="widget-title">Category</h5>
+								<ul>
+									{% with categories=''|getWidgetCategories %}
+										{% recursetree categories %}
+											<li class="cat-item">
+												<a href="{% url 'frontend:blogcategory' slug=node.slug %}">
+													{{node.title}}
+												</a>&nbsp;
+												{% if not node.is_leaf_node %}
+												<ul>
+													{{children}}
+												</ul>
+												{% endif %}
+											</li>    
+										{% endrecursetree %}                                     
+									{% endwith %}
+								</ul>
+							</div>
+							{% endif %}
+
+
+							<!--Archives Start-->
+							{% if site_config.Widget.show_archive_widget.value == '1' %}
+							<div class="widget widget_categories">
+								<h5 class="widget-title">Archive</h5>
+								<ul>
+									{% with archives=''|getWidgetArchives %}
+										{% for item in archives %}
+										<li class="cat-item">
+											<a href="{% url 'frontend:archive' year=item.year month=item.month %}">
+												{{ item|date:"F Y" }}
+											</a>&nbsp;
+										</li>
+										
+										{% endfor %}
+                         
+									{% endwith %}
+								</ul>
+							</div>
+							{% endif %}
+							<!--Archives End-->
+
+							
+							{% if site_config.Widget.show_tag_widget.value == '1' %}
+							<div class="widget widget_tag_cloud">
+								<h5 class="widget-title">All Tags</h5>
+								<div class="tagcloud"> 
+									{% for tag in ''|getPopularTags %}
+									<a href="{% url 'frontend:blogtag' slug=tag.slug %}">{{tag.name}}</a>
+									{% endfor %}
+								</div>
+							</div>
+							{% endif %}
+							<!--Side Widget End-->
+							
+						</aside>
+					</div>
+					{% endif %}
+
+                </div>
+            </div>
+		</section>
+
+
+	</div>
+		<!-- Footer -->
+		{% include 'theme5/elements/footer.html' %}
+		<!-- Footer End -->
+		
+</div>
+<!-- JAVASCRIPT FILES ========================================= -->
+
+
+{% for jsurl in dz_array.pagelevel.frontend.global.js.theme5.top %}
+<script src="{% static jsurl %}"></script>
+{% endfor %}
+
+
+{% for jsurl in dz_array.pagelevel.frontend.global.js.theme5.bottom %}
+<script src="{% static jsurl %}"></script>
+{% endfor %}
+<script>
+	/*
+		On submiting the form, send the POST ajax
+		request to server and after successfull submission
+		display the object.
+	*/
+	$("#subscribe-form").submit(function (e) {
+		// preventing from page reload and default actions
+		e.preventDefault();
+		// serialize the data for sending the form data.
+		var serializedData = $(this).serialize();
+		// make POST ajax call
+		$.ajax({
+			type: 'POST',
+			url: "{% url 'dashboard:subscribe:add-subscriber' %}",
+			data: serializedData,
+			success: function (response) {
+				// on successfull creating object
+				// 1. clear the form.
+				$("#subscribe-form").trigger('reset');
+				alert(response.message);
+
+			},
+			error: function (response) {
+				// alert the error if any error occured
+				alert(respons.error.val);
+			}
+		})
+	})
+</script>
+{% block additional_js %}
+{% endblock %}
+
+</body>
+</html>

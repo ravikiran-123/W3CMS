@@ -1,0 +1,66 @@
+{% extends 'theme5/elements/layouts/layout2.html' %}
+
+{% load static custom_tags widget_tweaks %}
+
+{% block additional_css %}
+{% endblock %}
+
+
+{% block content %}
+
+<section class="section-full bg-white content-inner contact-form">	
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 col-md-12">
+                <h1 class="contact-title text-center">Get in touch with Me…</h1>
+                <div class="dlab-post-media m-b30">
+                    <a href="#"><img src="/static/theme5/images/about/pic1.jpg" alt=""></a>
+                </div>
+                <div class="max-w700 m-auto">
+                    <p class="first-content">Aliquam eleifend consequat est laoreet bibendum. Proin et nibh augue. Fusce condimentum vehicula condi entum. Nulla rutrum justo pellentesque nunc porta aliquam. Mauris sodales mauris sed mi elementum faucibus. Aliquam tinci dunt sem nec augue porta euismod. Nulla facilisi. Nulla ultricies ipsum massa, quis molestie magna acibus sed.</p>
+                    <p>Mauris sed risus facilisis, ullamcorper massa eu, elementum ligula. Vivamus sit amet risus i ornare finibus vitae ac nulla. Aenean eget ex ut libero congue rutrum a et diam. Mauris eu metus et nibh pulvinar tempus idefficitur dolor.</p>
+                    <div class="dzFormMsg"></div>
+                    <form class="dzform" method="post" >{% csrf_token %}
+                        {% include 'theme1/elements/alert.html' %}
+                        
+                        {% if message %}
+                        <div class="text-success mb-3">{{ message }}</div>
+                        {% endif %}
+                        {% if errors %}
+                        <div class="text-danger mb-3">{{ errors }}</div>
+                        {% endif %}
+                        <div class="row m-lr0">
+                            <div class="col-md-6 col-sm-6 p-lr0">
+                                <div class="form-group">
+                                    {{ contactus_form.name|attr:"class:form-control"|attr:"placeholder:Full Name" }}
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-6 p-lr0">
+                                <div class="form-group">
+                                    {{ contactus_form.phone|attr:"class:form-control"|attr:"placeholder:Phone No." }}
+                                </div>
+                            </div>
+                            <div class="col-md-12 col-sm-12 p-lr0">
+                                <div class="form-group">
+                                    {{ contactus_form.email|attr:"class:form-control"|attr:"placeholder:Email Address" }}
+                                </div>
+                            </div>
+                            <div class="col-md-12 col-sm-12 p-lr0 m-b30">
+                                <div class="form-group">
+                                    {{ contactus_form.message|attr:"class:form-control"|attr:"rows:5" }}
+                                    <button name="submit" type="submit" value="Submit" class="btn radius-no primary">Add Message</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block additional_js %}
+
+{% endblock %}

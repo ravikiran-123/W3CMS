@@ -1,0 +1,262 @@
+{% extends 'dashboard/elements/layouts/admin.html' %}
+{% load static %}
+{% load mptt_tags %}
+{% load static widget_tweaks %}
+
+
+{% block additional_css %}
+ 
+{% endblock %}
+
+
+
+{% block message %}
+{% include 'dashboard/elements/alert.html' %}
+{% endblock %}
+
+
+{% block content %}
+
+<div id="message">
+</div>
+
+
+
+
+
+<!-- Filter -->
+
+<div class="custome-accordion">
+    <div class="accordion" id="accordionPageFilter">
+        <div class="accordion-item card">
+            <h2 class="accordion-header border-0" id="headingOne">
+            <button class="accordion-button d-flex justify-content-between align-items-center collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collaps-page-filter" aria-expanded="false" aria-controls="collaps-page-filter">
+                    <span class="acc-heading">Filter</span>
+            </button>
+            </h2>
+            <div id="collaps-page-filter" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionPageFilter" style="">
+                <div class="accordion-body card-body pt-0">
+                <form action="{% url 'dashboard:comment:comments' %}" method="post" id="comment-filter-form">{% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-lg-6 col-xl-3">
+                                    <div class="mb-3">
+                                        
+                                        <input type="text"
+                                        name="filter-comment-name"
+                                        class="form-control input-default"
+                                        placeholder="Name"
+                                        {% if form_data.filter_comment_name %}
+                                        value="{{form_data.filter_comment_name}}"
+                                        {% endif %}
+                                        >
+                                    </div>
+                                </div>
+                              
+                                <div class="col-lg-6 col-xl-3">
+                                    
+                                    <input type="text" 
+                                            name="filter-comment-email" 
+                                            class="form-control input-default"
+                                            placeholder="email"
+                                            {% if form_data.filter_comment_email %}
+                                            value="{{form_data.filter_comment_email}}"
+                                            {% endif %}
+                                            >
+                                </div>
+                                <div class="col-lg-6 col-xl-3">
+                                    
+                                        <select name="filter-comment-status" class="default-select form-control wide mb-3">
+                                        {% for stat in status %}
+                                          <option value="{{stat.value}}" {% if stat.value == form_data.filter_comment_status %}selected{% endif %}>{{stat.label}}</option>
+                                        {% endfor %}
+                                      </select>
+                                </div>
+
+                                <div class="col-lg-6 col-xl-3">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <button type="submit" class="btn btn-primary w-100 mb-3"><i class="fa-solid fa-magnifying-glass me-1"></i>Filter</button>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <a href="javascript:void(0);" type="button" class="btn light btn-outline-primary clear-comment-filter w-100">Clear</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+                </div>
+            </div>  
+        </div>
+    </div>
+</div>
+
+<!--END Filter-->
+
+
+
+
+
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Comments</h4>
+                    <div class="d-flex">
+                        {% if perms.comment.delete_comment %}
+                        <button type="button" id="delete_multiple_items"  data-url="{% url 'dashboard:comment:delete-multiple-comments' %}" class="btn light btn-outline-primary me-2 ">Delete</button>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="card-body pb-0">
+                    <div class="table-responsive">
+                        <table class="table table-responsive-md">
+                            <thead>
+                                <tr>
+                                    <th style="width:50px;">
+                                        <div class="form-check custom-checkbox checkbox-primary check-lg me-3">
+                                            <input  type="checkbox" class="form-check-input" id="checkAll" value="">
+                                            <label class="form-check-label" for="checkAll"></label>
+                                        </div>
+                                    </th>
+                                    <th>Commentor</th>
+                                    <th>Blog</th>
+                                    <th>Status</th>
+                                    <th>Created</th>
+                                    {% if perms.comment.change_comment or perms.comment.delete_comment %}  
+                                    <th>Action</th>
+                                    {% endif %}
+                                  
+                                   
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% csrf_token %}
+                                {% for comment in  comments %}
+                                <tr id="{{ comment.id }}">
+                                    <td>
+                                        <div class="form-check custom-checkbox checkbox-primary check-lg me-3">
+                                            <input name="comment_id[]" type="checkbox" class="form-check-input" value="{{ comment.id }}">
+                                            <label class="form-check-label" for="checkbox-{{ comment.id }}"></label>
+                                        </div>
+                                    </td>
+
+
+                                      <!--<th>{{ forloop.counter }}</th>-->
+                                      <td>{{ comment.name}}</td>
+                                      <td>{{ comment.post.title }}</td>
+                                      <td>
+                                        {% if comment.status == 'pending' %}
+                                        <span class="label label-warning">Pending</span>
+                                        {% endif %}
+                                        {% if comment.status == 'approved' %}
+                                        <span class="label label-success">Approved</span>
+                                        {% endif %}
+                                        {% if comment.status == 'spam' %}
+                                        <span class="label label-danger">Spam</span>
+                                        {% endif %}
+                                        {% if comment.status == 'trash' %}
+                                        <span class="label label-danger">Trash</span>
+                                        {% endif %}
+                                    </td>
+                                      <td>{{ comment.publish }}</td>
+                                      {% if perms.comment.change_comment or perms.comment.delete_comment %}                            
+                                        <td>
+                                            <div class="sweetalert">
+                                                <div class="d-flex">
+                                                    {% if perms.comment.change_comment %}
+                                                    <a href="{% url 'dashboard:comment:blogCommentEdit' id=comment.id %}" class="btn btn-primary shadow btn-xs sharp me-1" title="Edit"><i class="fa fa-pencil"></i></a>
+                                                    {% endif %}
+                                                    {% if perms.comment.delete_comment %}
+                                                    <a href="{% url 'dashboard:comment:blogCommentDelete' id=comment.id %}" class="btn btn-danger shadow btn-xs sharp sweet-success-cancel" title="Delete"><i class="fa fa-trash"></i></a>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </td>
+                                    {% endif %}
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+
+                        <div class="text-primary d-flex justify-content-center">
+                            <h4>{{message}}</h4>
+                        </div>
+                    </div>
+
+                    {% if not message  %}
+                    <nav mt-5 class="d-flex align-items-center justify-content-between py-3">
+
+                        <p>
+                            <span class="current">
+                            Page {{ comments.number }} of {{ comments.paginator.num_pages }}.
+                           </span> 
+                        </p>
+                        <ul class="pagination pagination-gutter">
+                            
+                                <li class="page-item page-indicator ">
+                                    <a class="page-link" href="{% if comments.has_previous %}
+                                                                ?page={{ comments.previous_page_number }}
+                                                                {% else %}
+                                                                javascript:void(0);
+                                                                {% endif %}">
+                                        <i class="la la-angle-left"></i></a>
+                                </li>
+
+                            {% for i in comments.paginator.page_range|slice:":3" %}
+
+                                <li class="page-item {% if comments.number == i %}
+                                                    active{% endif %}"><a class="page-link" href="?page={{i}}">{{i}}</a></li>
+                            
+                            {% endfor %}
+
+                            
+                            {% if comments.number > 3 %}
+                            <li class="page-item active"><a class="page-link" href="?page={{ comments.number }}">{{ comments.number }}</a></li>
+                            {% endif %}
+                            
+                            <li class="page-item page-indicator">
+                                <a class="page-link"  href="{% if comments.has_next %}
+                                                            ?page={{ comments.next_page_number }}
+                                                            {% else %}
+                                                            javascript:void(0);
+                                                            {% endif %}">
+                                    <i class="la la-angle-right"></i></a>
+                            </li>
+                            <li>
+
+                              
+
+                            </li>
+                        </ul>
+                       
+                    </nav>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+
+{% endblock %}
+
+
+{% block additional_js %}
+
+
+
+   
+{% endblock %}
+
+
+
+
+
+
+
+
+
+

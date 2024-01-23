@@ -1,0 +1,592 @@
+{% extends 'dashboard/elements/layouts/admin.html' %}
+{% load static widget_tweaks %}
+
+
+{% block message %}
+{% include 'dashboard/elements/alert.html' %}
+{% endblock %}
+
+{% block additonal_css %}
+
+
+{% endblock %}
+
+{% block content %}
+
+    <style>
+        .hidden{
+            display: none;
+        }
+    
+     
+    </style>
+<!--START Screen Options-->
+
+<div class="custome-accordion">
+    <div class="accordion" id="accordionExample">
+        <div class="accordion-item card">
+            <h2 class="accordion-header border-0" id="headingOne">
+              <button class="accordion-button d-flex justify-content-between align-items-center collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                
+                     <span class="acc-heading">Screen Options</span>
+                     {% comment %} <span class="ms-auto">(1/110)</span> {% endcomment %}
+                
+              </button>
+            </h2>
+            <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample" style="">
+              <div class="accordion-body card-body pt-0">
+
+                <div class="row">
+                    <div class="col-md-2">
+                        <div class="form-check custom-checkbox mb-3">
+                            <input type="checkbox" class="form-check-input  allowField AllowPageAttributes" id="AllowPageAttributes" rel="PageAttributes" disabled>
+                            <label class="form-check-label" for="AllowPageAttributes">PageAttributes</label>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-check custom-checkbox mb-3">
+                            <input type="checkbox" class="form-check-input allowField AllowPageType" id="AllowPageType" rel="PageType" disabled>
+                            <label class="form-check-label" for="AllowPageType">PageType</label>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-check custom-checkbox mb-3">
+                            <input type="checkbox" class="form-check-input allowField AllowFeaturedImage" id="AllowFeaturedImage" rel="FeaturedImage" >
+                            <label class="form-check-label" for="AllowFeaturedImage">FeaturedImage</label>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-check custom-checkbox mb-3">
+                            <input type="checkbox" class="form-check-input  allowField AllowSlug" id="AllowSlug" rel="Slug" >
+                            <label class="form-check-label" for="AllowSlug">Slug</label>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-check custom-checkbox mb-3">
+                            <input type="checkbox" class="form-check-input allowField AllowExcerpt" id="AllowExcerpt" rel="Excerpt">
+                            <label class="form-check-label" for="AllowExcerpt">Excerpt</label>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-check custom-checkbox mb-3">
+                            <input type="checkbox" class="form-check-input allowField AllowCustomFields" id="AllowCustomFields" rel="CustomFields" disabled>
+                            <label class="form-check-label" for="AllowCustomFields">CustomFields</label>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-check custom-checkbox mb-3">
+                            <input type="checkbox" class="form-check-input allowField AllowDiscussion" id="AllowDiscussion" rel="Discussion" disabled>
+                            <label class="form-check-label" for="AllowDiscussion">Discussion</label>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-2">
+                        <div class="form-check custom-checkbox mb-3">
+                            <input type="checkbox" class="form-check-input allowField AllowAuthor" id="AllowAuthor" rel="Author" >
+                            <label class="form-check-label" for="AllowAuthor">Author</label>
+                        </div>
+                    </div>
+                
+                    <div class="col-md-2">
+                        <div class="form-check custom-checkbox mb-3">
+                            <input type="checkbox" class="form-check-input allowField AllowSeo" id="AllowSeo" rel="Seo"  >
+                            <label class="form-check-label" for="AllowSeo">SEO</label>
+                        </div>
+                    </div>
+                
+                </div>
+              
+              </div>
+            </div>  
+        </div>
+    </div>
+</div>
+
+<!--END Screen Options-->
+
+
+
+
+<div class="row page-titles mx-0 mb-3">
+    <div class="col-sm-6 p-md-0">
+        <div class="welcome-text">
+            <h4>Pages</h4>
+            <span>Add Page </span>
+        </div>
+    </div>
+    <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'dashboard:pages:pages' %}">Pages</a></li>
+            <li class="breadcrumb-item active"><a href="{% url 'dashboard:pages:page_create' %}">Add Page</a></li>
+        </ol>
+    </div>
+</div>
+
+
+
+
+
+<form method="post" enctype="multipart/form-data" novalidate autocomplete="off" class="mb-5">
+    {% csrf_token %}
+    <div class="row">
+        <div class="col-md-8">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header d-block">
+                            <h4 class="card-title">Crate Page</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="mb-3">
+                                        <label for="exampleFormControlInput1" class="form-label">Title</label>
+                                        <!-- {{ form_page.title|attr:"type:text"|attr:"class:form-control"|attr:"onload:convertToSlug(this.value)"|attr:"onkeyup=convertToSlug(this.value)"|attr:"placeholder:Title" }} -->
+                                        {{ form_page.title|attr:"type:text"|attr:"class:form-control"|attr:"id:ContentTitle"|attr:"placeholder:Title" }}
+                                        {% if form_page.title.errors %}
+                                        <div class="text-danger w-100 d-block mt-1">
+                                            {{ form_page.title.errors }}
+                                        </div>
+                                        {% endif %}
+
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12 mb-3">
+
+                                    {{ form_page.media }}
+                                    {{ form_page.content }}
+                                    
+                                  </div>
+
+
+                               </div>
+                        </div>
+                    </div>
+                </div>
+                <!--START Page Excerpt --> 
+                <div class="col-md-12">
+                    <div class="custome-accordion XExcerpt" style="display:none;">
+                        <div class="accordion" id="accordion-excerpt">
+                            <div class="accordion-item card">
+                                <h2 class="accordion-header border-0" id="headingOne">
+                                  <button class="accordion-button d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#with-excerpt" aria-expanded="true" aria-controls="with-excerpt">
+                                         <span class="acc-heading">Excerpt</span>
+                                         {% comment %} <span class="ms-auto">(1/110)</span> {% endcomment %}
+                                  </button>
+                                </h2>
+                                <div id="with-excerpt" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordion-excerpt" style="">
+                                  <div class="accordion-body card-body pt-0">
+                                    <div class="row">
+                                        <div class="col-md-12 mb-3">
+                                            <label class="form-label">Excerpt</label>
+                                            {{ form_page.excerpt|attr:"class:form-control"|attr:"rows:3"|attr:"cols:10" }}
+                                        </div>
+                                    </div>
+                                  </div>
+                                </div>  
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--End Page Excerpt--> 
+                <!--START Page Custom Field--> 
+                <div class="col-md-12">
+                    <div class="custome-accordion XCustomFields" style="display:none;">
+                        <div class="accordion" id="accordion-customfield">
+                            <div class="accordion-item card">
+                                <h2 class="accordion-header border-0" id="headingOne">
+                                <button class="accordion-button d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#with-customfield" aria-expanded="true" aria-controls="with-customfield">
+                                        <span class="acc-heading">Custom Fields</span>
+                                </button>
+                                </h2>
+                                <div id="with-customfield" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordion-customfield" style="">
+                                <div class="accordion-body card-body pt-0">
+                                    <div class="row">
+                                        <div id="cfield-form-list">
+                                            {{ page_meta_formset.management_form }}
+                    
+                                            {% for meta_form in page_meta_formset %}
+                                                <div id="form-{{forloop.counter0}}" class="cfield-form xrow">
+                                                    <div class="col-md-12 mb-3">
+                                                        <div class="row d-flex align-items-center">
+                                                            <div class="col-md-5">
+                                                                <label class="form-label">Name</label>
+                                                                {{ meta_form.name|attr:"class:form-control"|attr:"type:text" }}
+                                                            </div>
+                                                            <div class="col-md-5">
+                                                                <label class="form-label">Value</label>
+                                                                {{ meta_form.value|attr:"class:form-control"|attr:"rows:2" }}
+                                                            </div>
+                                                            <div class="col-md-2">
+                                                                <div class="form-check custom-checkbox mb-3 checkbox-primary">
+                                                                    {{ meta_form.DELETE|attr:"class:form-check-input"|attr:"type:checkbox" }}
+                                                                    <label class="form-check-label" for="customCheckBox2">Delete</label>
+                                                                </div>
+                    
+                                                            </div>
+                                                            
+                                                           
+                                                        </div>
+                                                    </div>
+                                                    {{meta_form.id}}
+                                                </div>   
+                                                
+                                            {% endfor %}
+                                        </div>
+                    
+                            
+                                        <div id="empty_form" class="hidden">
+                                            <div class="col-md-12 mb-3">
+                                                <div class="row d-flex align-items-center">
+                                                    <div class="col-md-5">
+                                                        <label  class="form-label">Name</label>
+                                                        {{ page_meta_formset.empty_form.name|attr:"type:text"|attr:"class:form-control" }}
+                                                    </div>
+                                                    <div class="col-md-5">
+                                                        <label  class="form-label">Value</label>
+                                                        {{ page_meta_formset.empty_form.value|attr:"class:form-control"|attr:"rows:2" }}
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <div class="form-check custom-checkbox mt-4 checkbox-primary">
+                                                            <i class="fa-sharp fa-solid fa-xmark remove_cfield fs-2 text-primary"></i>
+                                                            {% comment %} {{ page_meta_formset.empty_form.DELETE|attr:"class:form-check-input remove_cfield"|attr:"type:checkbox" }}
+                                                            <label class="form-check-label" for="customCheckBox2">Delete</label> {% endcomment %}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <input type="hidden" name="form-id-count" value="0" id="form-id-count">
+                                        <div class="col-md-12">
+                                            <button type="button" id="add-cfield" class="btn btn-primary mb-3 mt-3 ">Add Custom Field</button>
+                                        </div>                
+                                    </div>
+                                </div>
+                                </div>  
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--END Page Custom Field-->
+                <!--START Page Discussion-->
+                <div class="col-md-12">
+                    <div class="custome-accordion XDiscussion" style="display:none;">
+                        <div class="accordion" id="accordion-discussion">
+                            <div class="accordion-item card">
+                                <h2 class="accordion-header border-0" id="headingOne">
+                                  <button class="accordion-button d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#with-discussion" aria-expanded="true" aria-controls="with-discussion">
+                                         <span class="acc-heading">Discussion</span>
+                                        
+                                  </button>
+                                </h2>
+                                <div id="with-discussion" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordion-discussion" style="">
+                                  <div class="accordion-body card-body pt-0">
+                                    <div class="row">
+                                        <div class="col-md-12 mb-3">
+                                            <div class="form-check">
+                                                {{ form_page.comment|attr:"class:form-check-input"|attr:"type:checkbox" }}
+                                                <label class="form-check-label" for="flexCheckDefault">
+                                                Comment
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                  </div>
+                                </div>  
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--END Page Discussion-->
+                <!--START Page Slug-->
+                <div class="col-md-12">
+                    <div class="custome-accordion XSlug" style="display:none;">
+                        <div class="accordion" id="accordion-Slug">
+                            <div class="accordion-item card">
+                                <h2 class="accordion-header border-0" id="headingOne">
+                                  <button class="accordion-button d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#with-slug" aria-expanded="true" aria-controls="with-slug">
+                                         <span class="acc-heading">Slug</span>
+                                         
+                                  </button>
+                                </h2>
+                                <div id="with-slug" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordion-Slug" style="">
+                                  <div class="accordion-body card-body pt-0">
+                                    <div class="row">
+                                        <div class="col-md-12 mb-3">
+                                            <label class="form-label">Slug</label>
+                                            {{ form_page.slug|attr:"class:form-control slug"|attr:"type:text"|attr:"id:slug" }}
+                                            
+                                            {% if form_page.slug.errors %}
+                                            <div class="text-danger w-100 d-block mt-1">
+                                                {{ form_page.slug.errors }}
+                                            </div>
+                                            {% endif %}                                      
+                    
+                                        </div>
+                                    </div>
+                                  </div>
+                                </div>  
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--END Page Slug-->
+                <!--START Page Author-->
+                <div class="col-md-12">
+                    <div class="custome-accordion XAuthor" style="display:none;">
+                        <div class="accordion" id="accordion-Author">
+                            <div class="accordion-item card">
+                                <h2 class="accordion-header border-0" id="headingOne">
+                                  <button class="accordion-button d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#with-author" aria-expanded="true" aria-controls="with-author">
+                                    
+                                         <span class="acc-heading">Author</span>
+                                    
+                                  </button>
+                                </h2>
+                                <div id="with-author" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordion-Author" style="">
+                                  <div class="accordion-body card-body pt-0">
+                                    <div class="row">
+                                        <div class="col-md-12 mb-3">
+                                            <label class="form-label">Author</label>
+                                                                                    
+                                                                                                                                                                          
+                                            <select name="user_id"  class="default-select form-control wide mb-3 form-control-lg">
+                                                
+                                                {% for user in users %}
+                                                    {% if form_page.user_id.value %}
+                                                    <option {% if user.id == form_page.user_id.value %} selected {% endif %} value="{{user.id}}">{{ user.username }} </option>
+                                                    {% else %}
+                                                    
+                                                    <option {% if request.user.id == user.id %} selected {% endif %} value="{{user.id}}">{{ user.username }}</option>
+                                                    {% endif %}
+                                                
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                    
+                    
+                                    </div>
+                                  </div>
+                                </div>  
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--END Page Author-->
+                <!--START Page SEO-->
+                <div class="col-md-12">
+                    <div class="custome-accordion XSeo" style="display:none;">
+                        <div class="accordion" id="accordion-SEO">
+                            <div class="accordion-item card">
+                                <h2 class="accordion-header border-0" id="headingOne">
+                                  <button class="accordion-button d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#with-seo" aria-expanded="true" aria-controls="with-seo">
+                                    
+                                         <span class="acc-heading">SEO</span>
+                                         {% comment %} <span class="ms-auto">(1/110)</span> {% endcomment %}
+                                    
+                                  </button>
+                                </h2>
+                                <div id="with-seo" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordion-SEO" style="">
+                                  <div class="accordion-body card-body pt-0">
+                                    <div class="row">
+                                        <div class="row">
+                                            <div class="col-md-12 mb-3">
+                                                <label class="form-label">Page Title</label>
+                                                {{ form_page_seo.title|attr:"class:form-control"|attr:"type:text"|attr:"id:SEOPageTitle"}}
+                                                <div class="text-danger w-100 d-block mt-1">
+                                                    {{ form_page_seo.title.errors }}
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12 mb-3">
+                                                <label class="form-label">Meta Keywords</label>
+                                                {{ form_page_seo.meta_keywords|attr:"class:form-control"|attr:"type:text"}}
+                                            </div>
+                                            <div class="col-md-12 mb-3">
+                                                <label class="form-label">Meta Descriptions</label>
+                                                {{ form_page_seo.meta_descriptions|attr:"class:form-control"|attr:"rows:3"|attr:"cols:10"}}
+                                            </div>
+                                        </div>
+                    
+                                    </div>
+                                  </div>
+                                </div>  
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--End Page SEO-->                
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="row">
+                <!--START Page Publish-->
+                <div class="col-md-12">
+                    <div class="custome-accordion">
+                        <div class="accordion" id="accordion-publish">
+                            <div class="accordion-item card">
+                                <h2 class="accordion-header border-0" id="headingOne">
+                                  <button class="accordion-button d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#with-publish" aria-expanded="true" aria-controls="with-publish">
+                                    
+                                         <span class="acc-heading">Publish</span>
+                                         {% comment %} <span class="ms-auto">(1/110)</span> {% endcomment %}
+                                    
+                                  </button>
+                                </h2>
+                                <div id="with-publish" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordion-publish" style="">
+                                  <div class="accordion-body card-body pt-0">
+                                    <div class="row">
+                                        <div class="col-md-12 mb-3">
+                                            <label class="form-label">Status</label>
+                                            {{ form_page.status|attr:"class:default-select form-control wide"|attr:"id:ContentStatus"  }}
+                                        </div>
+                    
+                                        <div class="col-md-12 mb-3">
+                                            <label class="form-label">Visibility</label>
+                                            {{ form_page.visibility|attr:"class:default-select form-control wide"|attr:"id:ContentVisibility"  }}
+                                        </div>
+                    
+                                        <div class="col-md-12 mb-3" id="PublicPasswordTextbox" {% if form_page.password.value == None %} style="display: none;"{% endif %}>
+                                            <label class="form-label">Password</label>
+                                            {{ form_page.password|attr:"class:form-control"|attr:"type:password"|attr:"id:ContentPassword" }}
+                                        </div>
+                                       
+                                        <div class="col-md-12 mb-3">
+                                            <label class="form-label">Published on</label>
+                                            {{ form_page.publish_on|attr:"class:datetimepicker form-control"|attr:"type:date"|attr:"id:PublishDateTimeTextbox" }}
+                                        </div>
+                    
+                                        <div class="col-md-12 mb-3">
+                                          <button type="submit" class="btn btn-primary">{% if not edit %}Create{% else %}Update{% endif %}</button>
+                                      </div>
+                    
+                                    </div>
+                                  </div>
+                                </div>  
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--END Page Publish-->
+                <!--START Page Attributes-->
+                <div class="col-md-12">
+                    <div class="custome-accordion XPageAttributes" style="display:none">
+                        <div class="accordion" id="accordion-parent">
+                            <div class="accordion-item card">
+                                <h2 class="accordion-header border-0" id="headingOne">
+                                  <button class="accordion-button d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#with-parent" aria-expanded="true" aria-controls="with-parent">
+                                    
+                                         <span class="acc-heading">Page Attributes</span>
+                                         {% comment %} <span class="ms-auto">(1/110)</span> {% endcomment %}
+                                    
+                                  </button>
+                                </h2>
+                                <div id="with-parent" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordion-parent" style="">
+                                  <div class="accordion-body card-body pt-0">
+                                    <div class="row">
+                                        <div class="col-md-12 mb-3">
+                                            <label class="form-label">Parent</label>
+                                            <select name="parent" class="default-select form-control wide" aria-label="Select Page Attributes">
+                                                <option value="">no parent</option>
+
+                                                {% for page in pages %}
+                                                    {% if page.title != form_page.title.value %}
+                                                            <option {% if page.id == form_page.parent.value %} selected {% endif %} value="{{ page.id }}">{{page.title}}</option>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </select> 
+
+                                            {% comment %} {{ form_page.parent|attr:"class:form-control"|attr:"type:text" }} {% endcomment %}
+
+                                        </div>
+                    
+                                    </div>
+                                  </div>
+                                </div>  
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--END Page Attributes-->
+                <!--START Page Page Type-->
+                <div class="col-md-12">
+                    <div class="custome-accordion XPageType" style="display:none">
+                        <div class="accordion" id="accordion-pagetype">
+                            <div class="accordion-item card">
+                                <h2 class="accordion-header border-0" id="headingOne">
+                                  <button class="accordion-button d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#with-pagetype" aria-expanded="true" aria-controls="with-pagetype">
+                                    
+                                         <span class="acc-heading">Page Type</span>
+                                         {% comment %} <span class="ms-auto">(1/110)</span> {% endcomment %}
+                                    
+                                  </button>
+                                </h2>
+                                <div id="with-pagetype" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordion-pagetype" style="">
+                                  <div class="accordion-body card-body pt-0">
+                                    <div class="row">
+                                        <div class="col-md-12 mb-3">
+                                            <label class="form-label">Page Type</label>
+                                            {{ form_page.type|attr:"class:default-select form-control wide" }}
+                                        </div>
+                                    </div>
+                                  </div>
+                                </div>  
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--END Page Page Type-->
+                <!--START Page Feature Image-->
+                <div class="col-md-12">
+                    <div class="custome-accordion XFeaturedImage" style="display:none;">
+                        <div class="accordion" id="accordion-FeaturedImage">
+                            <div class="accordion-item card">
+                                <h2 class="accordion-header border-0" id="headingOne">
+                                  <button class="accordion-button d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#with-featuredimage" aria-expanded="true" aria-controls="with-featuredimage">
+                                         <span class="acc-heading">Featured Image</span>
+                                         {% comment %} <span class="ms-auto">(1/110)</span> {% endcomment %}
+                                  </button>
+                                </h2>
+                                <div id="with-featuredimage" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordion-FeaturedImage" style="">
+                                  <div class="accordion-body card-body pt-0">
+                                    <div class="row">
+                                        <div class="col-md-12 mb-3">
+
+                                                <div class="avatar-upload feature-img-upload">
+                                                  
+                                                    <div class="avatar-preview feature-img">
+                                                        <div id="imagePreview" style="background-image: url('{{ form_page.instance.feature_image.url }}');">
+                                                        </div>
+                                                    </div>
+
+                                                    {{ form_page.feature_image|attr:"type:file"|attr:"class:form-control form-control-sm"|attr:"id:id_avatar" }}
+                                                </div>
+                                        </div>
+                                    </div>
+                                  </div>
+                                </div>  
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--END Page Feature Image-->
+            </div>
+        </div>
+    </div>
+</form>
+
+
+<script type="text/javascript">
+    var screenOptionArray = JSON.stringify({{ ScreenOption|safe }});
+    console.log(screenOptionArray);
+</script>
+
+
+
+{% endblock %}
+
+
+{% block additional_js %}
+
+
+{% endblock %}

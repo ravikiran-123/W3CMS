@@ -1,0 +1,167 @@
+{% extends 'dashboard/elements/layouts/admin.html' %}
+
+{% load static %}
+
+{% block additional_css %}
+{% endblock %}
+
+
+
+{% block message %}
+{% include 'dashboard/elements/alert.html' %}
+{% endblock %}
+
+{% block content %}
+
+
+
+<div class="row page-titles mx-0 mb-3">
+    <div class="col-sm-6 p-md-0">
+        <div class="welcome-text">
+            <h4>Configurations</h4>
+            <span>all configurations</span>
+        </div>
+    </div>
+    {% if perms.dashboard.view_configurations or perms.dashboard.add_configurations %}
+    <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
+        <ol class="breadcrumb">
+            {% if perms.dashboard.view_configurations %}
+            <li class="breadcrumb-item"><a href="{% url 'dashboard:all-config' %}">Configurations</a></li>
+            {% endif %}
+            {% if perms.dashboard.add_configurations %}
+            <li class="breadcrumb-item active"><a href="{% url 'dashboard:add-config' %}">Add Config</a></li>
+            {% endif %}
+        </ol>
+    </div>
+    {% endif %}
+</div>
+
+
+{% comment %} 
+<!--Upload and Downlaod Config Start-->
+<div class="row page-titles mx-0 mb-3 align-items-center">
+    <div class="col-sm-6 p-md-0">
+        <div class="welcome-text">
+            <h4>Downlaod config.json using</h4>
+            <p>/dashboard/configurations/<span class="text-secondary">download</span>/</p>
+        </div>
+    </div>
+    <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex sweetalert">
+        {% if perms.dashboard.delete_configurations and perms.dashboard.add_configurations and perms.dashboard.view_configurations %}
+        
+            <a  href="{% url 'dashboard:reset-config' %}" class="btn light btn-outline-primary sweet-reset-cancel">Reset Config</a>
+        {% endif %}
+    </div>
+</div> {% endcomment %}
+
+<!--Upload and Downlaod Config End-->
+
+
+<div class="card">
+    <div class="card-header sweetalert ">
+        <h4 class="card-title">Configurations</h4>
+		<div>
+			 {% if perms.dashboard.delete_configurations and perms.dashboard.add_configurations and perms.dashboard.view_configurations %}
+			<a  href="{% url 'dashboard:reset-config' %}" class="btn light btn-outline-primary sweet-reset-cancel me-1">Reset Config</a>
+			{% endif %}
+			{% if perms.dashboard.add_configurations  %}
+		   <a  href="{% url 'dashboard:add-config' %}" class="btn btn-primary ms-1">Add Config</a>
+		   {% endif %}
+		  
+		</div>	
+    </div>
+    <div class="card-body pt-0">
+        <div class="table-responsive">
+            <table class="table table-responsive-md">
+                <thead>
+                    <tr>
+                       
+                        <th><strong>Name</strong></th>
+                        <th><strong>Value</strong></th>
+                        <th><strong>Action</strong></th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                {% for config in all_config %}
+                    <tr>
+                       
+                        <td>{{config.name}}</td>
+                        
+                        <td>{{config.title}}</td>
+                       
+                        <td>
+                            <div class="d-flex sweetalert">
+                                {% if perms.dashboard.change_configurations %}
+                                <a href="{% url 'dashboard:edit-config' id=config.id %}" class="btn btn-primary shadow btn-xs sharp me-1" title="Edit"><i class="fa fa-pencil"></i></a>
+                                {% endif %}
+                                {% if perms.dashboard.delete_configurations %}
+                                <a href="{% url 'dashboard:delete-config' id=config.id %}" class="btn btn-danger shadow btn-xs sharp sweet-success-cancel" title="Delete"><i class="fa fa-trash"></i></a>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+
+
+
+
+
+    </div>
+</div>
+{% endblock %}
+
+{% block additional_js %}
+
+<script type="text/javascript">
+    $('.sweet-success-cancel').on('click', function (event) {
+        event.preventDefault();
+        const url = $(this).attr('href');
+    
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            type: "warning",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: "Yes, delete it !!",
+            confirmButtonText: 'Delete',
+            confirmButtonColor: "#DD6B55"
+            
+        }).then((result) => {
+            if (result.value) {
+                window.location.href = url;
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                event.preventDefault();
+            }
+        })
+    });
+    $('.sweet-reset-cancel').on('click', function (event) {
+        event.preventDefault();
+        const url = $(this).attr('href');
+    
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            type: "info",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: "Yes, Reset it !!",
+            confirmButtonText: 'Reset',
+            confirmButtonColor: "var(--primary)"
+            
+        }).then((result) => {
+            if (result.value) {
+                window.location.href = url;
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                event.preventDefault();
+            }
+        })
+    });
+</script>
+
+{% endblock %}

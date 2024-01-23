@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	
+	<!-- Meta -->
+	{% load static mptt_tags custom_tags %}
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="keywords" content="{{page_seo.meta_keywords}}"/>
+	<meta name="author" content=""/>
+	<meta name="robots" content=""/>
+	<meta name="description" content="{{ page_seo.meta_descriptions }}"/>
+	<meta property="og:title" content="{{ page_seo.title }}"/>
+	<meta property="og:description" content="{{ page_seo.meta_descriptions }}" />
+	<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}/media/{{ page_obj.feature_image }}" />
+	<meta name="format-detection" content="telephone=no">
+	
+	<!-- Mobile Specific -->
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	<!-- Title -->
+	<title>{{ site_config.Site.title.value }}</title>
+    
+	<!-- Favicon icon -->
+    <link rel="icon" type="image/png" href="{{ site_config.Site.favicon.value }}">
+
+
+	<!-- Custom Stylesheet -->
+	{% for cssurl in dz_array.pagelevel.frontend.global.css.theme5  %}
+    <link rel="stylesheet" href="{% static cssurl %}" >
+	{% endfor %}
+	<link  rel="stylesheet"  class="skin" href="{% static 'theme5/css/skin/skin-1.css' %}">
+
+
+
+
+</head>
+<body id="bg">
+	<div class="page-wraper">
+	<div id="loading-area"></div>
+	
+	
+	<!-- Header -->
+	{% if page_obj.title == 'Home' or page_obj.title == 'home' %}
+		
+	{% include "theme5/elements/header-bottom.html"  %}
+	{% else %}
+	{% include 'theme5/elements/header.html' %}
+	{% endif %}
+	<!-- Header End -->
+	
+	<div class="page-content bg-white">
+		
+		{% block message %}
+		{% endblock %}
+
+
+		{% if page_obj.title == 'Home' or page_obj.title == 'home' %}
+		
+		{% include "theme5/home-slider.html"  %}
+        {% else %}
+		<!-- Banner  -->
+		<div class="dlab-bnr-inr dlab-bnr-inr-sm overlay-black-middle bg-pt" style="background-image:url(/static/theme5/images/blog/blog-md/pic13.jpg);">
+			<div class="container">
+				<div class="dlab-bnr-inr-entry">
+					<h1 class="text-white">{{banner_title}}</h1>
+					{% if sub_banner_title %}
+					<h2 class="text-white">{{sub_banner_title}}</h2>
+					{% endif %} 
+				</div>
+			</div>
+		</div>
+		<!-- Banner End -->
+		{% endif %}
+
+				{% block content %}
+				{% endblock %}
+
+	</div>
+		<!-- Footer -->
+		{% include 'theme5/elements/footer.html' %}
+		<!-- Footer End -->
+
+</div>
+<!-- JAVASCRIPT FILES ========================================= -->
+{% for jsurl in dz_array.pagelevel.frontend.global.js.theme5.top %}
+<script src="{% static jsurl %}"></script>
+{% endfor %}
+
+
+{% for jsurl in dz_array.pagelevel.frontend.global.js.theme5.bottom %}
+<script src="{% static jsurl %}"></script>
+{% endfor %}
+
+<script>
+    /*
+        On submiting the form, send the POST ajax
+        request to server and after successfull submission
+        display the object.
+    */
+    $("#subscribe-form").submit(function (e) {
+        // preventing from page reload and default actions
+        e.preventDefault();
+        // serialize the data for sending the form data.
+        var serializedData = $(this).serialize();
+        // make POST ajax call
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'dashboard:subscribe:add-subscriber' %}",
+            data: serializedData,
+            success: function (response) {
+                $("#subscribe-form").trigger('reset');
+				alert(response.message);
+
+            },
+            error: function (response) {
+                // alert the error if any error occured
+                alert(respons.error.val);
+            }
+        })
+    })
+</script>
+{% block additional_js %}
+{% endblock %}
+
+</body>
+</html>

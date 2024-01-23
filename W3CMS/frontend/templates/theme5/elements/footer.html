@@ -1,0 +1,149 @@
+{% load static custom_tags mptt_tags %}
+
+
+
+<!-- Blog Card Carousel -->
+<!-- <div class="blog-card-carousel owl-carousel mfp-gallery  owl-none">
+    <div class="item">
+    {% for i in  site_config.site.video.value  %}
+     <a href="{{i}}" class="mfp-link dlab-img-effect fade-out" title="">
+    <video class="thevideo" muted onmouseover="this.play()" onmouseout="this.pause()" src="{{i}}"></video></a>
+    {% endfor %}
+</div>
+</div> -->
+
+<!-- Blog Card Carousel End -->
+
+
+    
+
+
+    
+    
+    
+   
+    
+  
+   
+    
+    
+    </div>
+    </div>
+    </div>
+    <!-- Blog Post End --><!-- Blog Slider -->
+    
+    <!-- Blog Slider End --><!-- Blog Post -->
+    
+    <!-- About Us End -->
+
+
+<!-- Newslatter -->
+<div class="newslatter-bx">
+    <div class="container">
+        <div class="row m-lr0 align-items-center dezPlaceAni dzSubscribe dz-subscription"> 
+            <div class="col-xl-6 col-lg-6 col-md-12">
+                <div class="title-bx">
+                    <h2 class="m-b0">Join Our Newsletter!</h2>
+                </div>
+            </div>
+            <div class="col-xl-6 col-lg-6 col-md-12 contact-form-bx">
+                <form method="post" class="" id="subscribe-form">
+                    {% csrf_token %}
+                    <div class="form-group subscribe">
+                        <div class="input-group">
+                            <input name="dzEmail" required="required" type="email" class="form-control" placeholder="Email Address...">
+                            <button name="submit" value="Submit" type="submit" class="btn-link">Subscribe</button>
+                        </div>
+                    </div>
+                    <div class="dzSubscribeMsg dz-subscription-msg">&nbsp;</div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Newslatter End -->
+<!-- Social Link Box -->
+<div class="section-full social-link-bx">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-2 col-md-4 col-sm-4 col-6">
+                <a href="{{site_config.Social.twitter.value}}" target="_blank" class="social-link">
+                    <i class="fa fa-twitter"></i>
+                    <span>twitter</span>
+                </a>
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-4 col-6">
+                <a href="{{site_config.Social.facebook.value}}" target="_blank" class="social-link">
+                    <i class="fa fa-facebook"></i>
+                    <span>Facebook</span>
+                </a>
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-4 col-6">
+                <a href="{{site_config.Social.instagram.value}}" target="_blank" class="social-link">
+                    <i class="fa fa-instagram"></i>
+                    <span>Instagram</span>
+                </a>
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-4 col-6">
+                <a href="{{site_config.Social.linkedin.value}}" target="_blank" class="social-link">
+                    <i class="fa fa-linkedin"></i>
+                    <span>Linkedin</span>
+                </a>
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-4 col-6">
+                <a href="{{site_config.Social.youtube.value}}" target="_blank" class="social-link">
+                    <i class="fa fa-youtube-play"></i>
+                    <span>Youtube</span>
+                </a>
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-4 col-6">
+                <a href="{{site_config.Social.pinterest.value}}" target="_blank" class="social-link">
+                    <i class="fa fa-pinterest-p"></i>
+                    <span>Pinterest</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Social Link Box End -->
+<!-- Footer -->
+<footer class="site-footer">
+    <div class="footer-top">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-4">
+                    <ul class="footer-link m-b0">
+                        <li><a href="/">Home</a></li>
+                        <li><a href="{% url 'frontend:blog_list' %}">All Blogs</a></li>
+                    
+                    </ul>						
+                </div>
+                <div class="col-lg-4">
+                    <div class="footer-logo">
+                        <a href="{% url 'frontend:home' %}" class="logo-white"><img src="{{site_config.Site.other_logo.value}}" alt=""></a>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <p class="copyright">{{site_config.Site.copyright_text.value}}{{site_config.Site.footer_text.value|safe}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+<!-- Footer END-->
+<button class="scroltop fa fa-chevron-up" ></button>
+<script src="https://www.youtube.com/iframe_api"></script>
+
+<script>
+$(document).ready(function() {
+  $('.video').each(function(el){
+    var _this = $(this);
+    _this.on('mouseover', function(ev) {
+ 
+      _this[0].src += "&autoplay=1";
+      ev.preventDefault();
+
+    });
+  });
+});
+</script>

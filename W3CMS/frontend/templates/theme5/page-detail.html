@@ -1,0 +1,57 @@
+{% extends 'theme5/elements/layouts/layout2.html' %}
+
+{% load static custom_tags %}
+
+{% block additional_css %}
+
+{% endblock %}
+
+
+
+
+{% block message %}
+{% comment %} {% include 'dashboard/elements/alert.html' %} {% endcomment %}
+{% endblock %}
+
+{% block content %}
+{% if page_obj %}
+    {% if not is_locked %}
+        
+        {{ page_obj.content|safe }}
+    {% else %}
+        <section class="content-inner-1">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-xl-3">
+                        <div class="login-wrapper">
+
+                            <form  method="post" class="login-form"> {% csrf_token %}
+                                <div class="form-group">
+                                
+                                    <label>Password<span class="text-danger">*</span></label>
+                                    <input type="password" name="password" class="form-control">
+                                    
+                                    {% if message %}
+                                    <div class="text-danger mb-2">
+                                        {{message}}
+                                    </div>
+                                    {% endif %}
+                                    <span class="text-success">Password is :123</span>
+                                </div>
+                                <button class="btn radius-no primary" type="submit">Submit</button>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    {% endif %}
+
+{% endif %}
+
+{% endblock %}
+
+{% block additional_js %}
+
+{% endblock %}

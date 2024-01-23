@@ -1,0 +1,680 @@
+{% extends 'dashboard/elements/layouts/admin.html' %}
+{% load static widget_tweaks mptt_tags %}
+
+
+{% block message %}
+{% include 'dashboard/elements/alert.html' %}
+{% endblock %}
+
+{% block additonal_css %}
+
+{% endblock %}
+
+{% block content %}
+
+
+<style>
+ul.category-checkbox-list { 
+list-style: none;
+margin: 5px 20px;
+}
+ul.category-checkbox-list li {
+margin: 5px 5px;
+}
+.django-ckeditor-widget{
+    width:100%
+}
+{% comment %} #categories_checkbox{
+    height:200px;
+    overflow-y: auto;
+} {% endcomment %}
+</style>
+
+
+
+<div class="custome-accordion">
+    <div class="accordion" id="accordionExample">
+        <div class="accordion-item card">
+            <h2 class="accordion-header border-0" id="headingOne">
+              <button class="accordion-button d-flex justify-content-between align-items-center collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                
+                     <span class="acc-heading">Screen Options</span>
+                     {% comment %} <span class="ms-auto">(1/110)</span> {% endcomment %}
+                
+              </button>
+            </h2>
+            <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample" style="">
+              <div class="accordion-body card-body pt-0">
+
+                <div class="row">
+                    <div class="col-md-2">
+                        <div class="form-check custom-checkbox mb-3">
+                            <input type="checkbox" id="AllowCategories" class="mr-1 allowField AllowCategories form-check-input" rel="Categories">
+                            <label class="form-check-label" for="AllowCategories">Categories</label>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-check custom-checkbox mb-3">
+                            <input type="checkbox" id="AllowFeaturedImage" class="mr-1 allowField AllowFeaturedImage form-check-input" rel="FeaturedImage">
+                            <label class="form-check-label" for="AllowFeaturedImage">FeaturedImage</label>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-check custom-checkbox mb-3">
+                            <input type="checkbox" id="AllowVideo" class="mr-1 allowField AllowVideo form-check-input" rel="Video">
+                            <label class="form-check-label" for="AllowVideo">Video</label>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-check custom-checkbox mb-3">
+                            <input type="checkbox" id="AllowExcerpt" class="mr-1 allowField AllowExcerpt form-check-input" rel="Excerpt">
+                            <label class="form-check-label" for="AllowExcerpt">Excerpt</label>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-check custom-checkbox mb-3">
+                            <input type="checkbox" id="AllowCustomFields" class="mr-1 allowField AllowCustomFields form-check-input" rel="CustomFields" disabled>
+                            <label class="form-check-label" for="AllowCustomFields">CustomFields</label>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-check custom-checkbox mb-3">
+                            <input type="checkbox" id="AllowDiscussion" class="mr-1 allowField AllowDiscussion form-check-input" rel="Discussion" disabled>
+                            <label class="form-check-label" for="AllowDiscussion">Discussion</label>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-check custom-checkbox mb-3">
+                            <input type="checkbox" id="AllowSlug" class="mr-1 allowField AllowSlug form-check-input" rel="Slug">
+                            <label class="form-check-label" for="AllowSlug">Slug</label>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-2">
+                        <div class="form-check custom-checkbox mb-3">
+                            <input type="checkbox" id="AllowAuthor" class="mr-1 allowField AllowAuthor form-check-input" rel="Author">
+                            <label class="form-check-label" for="AllowAuthor">Author</label>
+                        </div>
+                    </div>
+                
+                    <div class="col-md-2">
+                        <div class="form-check custom-checkbox mb-3">
+                            <input type="checkbox" id="AllowSeo" class="mr-1 allowField AllowSeo form-check-input" rel="Seo">
+                            <label class="form-check-label" for="AllowSeo">SEO</label>
+                        </div>
+                    </div>
+
+                    <div class="col-md-2">
+                        <div class="form-check custom-checkbox mb-3">
+                        <input type="checkbox" id="AllowTags" class="mr-1 allowField AllowTags form-check-input" rel="Tags">
+                            <label class="form-check-label" for="AllowTags">Tags</label>
+                        </div>
+                    </div>
+                
+                </div>
+              
+              </div>
+            </div>  
+        </div>
+    </div>
+</div>
+
+
+<div class="row page-titles mx-0 mb-3">
+    <div class="col-sm-6 p-md-0">
+        <div class="welcome-text">
+            <h4>Blogs</h4>
+            <span>Add Blog </span>
+        </div>
+    </div>
+    <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'dashboard:blog:blogs' %}">Blogs</a></li>
+            <li class="breadcrumb-item active"><a href="{% url 'dashboard:blog:blog_create' %}">Add Blog</a></li>
+        </ol>
+    </div>
+</div>
+
+
+<form method="post" enctype="multipart/form-data" novalidate autocomplete="off" class="mb-5">{% csrf_token %}
+    <div class="row">
+        <div class="col-md-8">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title">Add Blog Content</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-12 mb-3">
+                                    <label for="BlogTitle">Title</label>
+                                    {{ blog_form.title|attr:"type:text"|attr:"class:form-control"|attr:"id:BlogTitle"|attr:"placeholder:Title" }}
+                                
+                                    {% if blog_form.title.errors %}
+                                        <div class="text-danger w-100 d-block mt-1">
+                                            {{ blog_form.title.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-12 mb-3">
+
+                                  {{ blog_form.media }}
+                                  {{ blog_form.content }}
+                                  
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="custome-accordion XExcerpt" style="display:none;">
+                        <div class="accordion" id="accordion-excerpt">
+                            <div class="accordion-item card">
+                                <h2 class="accordion-header border-0" id="headingOne">
+                                  <button class="accordion-button d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#with-excerpt" aria-expanded="true" aria-controls="with-excerpt">
+                                         <span class="acc-heading">Excerpt</span>
+                                         {% comment %} <span class="ms-auto">(1/110)</span> {% endcomment %}
+                                  </button>
+                                </h2>
+                                <div id="with-excerpt" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordion-excerpt" style="">
+                                  <div class="accordion-body card-body pt-0">
+                                    <div class="row">
+                                        <div class="col-md-12 mb-3">
+                                            <label class="form-label">Excerpt</label>
+                                            {{ blog_form.excerpt|attr:"class:form-control"|attr:"rows:3" }}
+                                        </div>
+                                    </div>
+                                  </div>
+                                </div>  
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="custome-accordion XCustomFields" style="display:none;">
+                        <div class="accordion" id="accordion-customfield">
+                            <div class="accordion-item card">
+                                <h2 class="accordion-header border-0" id="headingOne">
+                                <button class="accordion-button d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#with-customfield" aria-expanded="true" aria-controls="with-customfield">
+                                        <span class="acc-heading">Custom Fields</span>
+                                       
+                                </button>
+                                </h2>
+                                <div id="with-customfield" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordion-customfield" style="">
+                                <div class="accordion-body card-body pt-0">
+                                    <div class="row">
+                                        <div id="cfield-form-list">
+                                            {{ blog_meta_formset.management_form }}
+
+                                            {% for meta_form in blog_meta_formset %}
+                                                <div id="form-{{forloop.counter0}}" class="cfield-form xrow">
+                                                    <div class="col-md-12 mb-3">
+                                                        <div class="row d-flex align-items-center">
+                                                            <div class="col-md-5">
+                                                                <label class="form-label">Name</label>
+                                                                {{ meta_form.title|attr:"class:form-control"|attr:"type:text" }}
+                                                            </div>
+                                                            <div class="col-md-5">
+                                                                <label class="form-label">Value</label>
+                                                                {{ meta_form.value|attr:"class:form-control"|attr:"rows:2" }}
+                                                            </div>
+                                                            <div class="col-md-2">
+                                                                <div class="form-check custom-checkbox mb-3 checkbox-primary">
+                                                                    {{ meta_form.DELETE|attr:"class:form-check-input"|attr:"type:checkbox" }}
+                                                                    <label class="form-check-label" for="customCheckBox2">Delete</label>
+                                                                </div>
+
+                                                            </div>
+                                                            
+                                                           
+                                                        </div>
+                                                    </div>
+                                                    {{meta_form.id}}
+                                                </div>   
+                                                
+                                            {% endfor %}
+                                        </div>
+
+                            
+                                        <div id="empty_form" class="hidden">
+                                            <div class="col-md-12 mb-3">
+                                                <div class="row d-flex align-items-center">
+                                                    <div class="col-md-5">
+                                                        <label  class="form-label">Name</label>
+                                                        {{ blog_meta_formset.empty_form.title|attr:"type:text"|attr:"class:form-control" }}
+                                                    </div>
+                                                    <div class="col-md-5">
+                                                        <label  class="form-label">Value</label>
+                                                        {{ blog_meta_formset.empty_form.value|attr:"class:form-control"|attr:"rows:2" }}
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <div class="form-check custom-checkbox mt-4 checkbox-primary">
+                                                            <i class="fa-sharp fa-solid fa-xmark remove_cfield fs-2 text-primary"></i>
+                                                            {% comment %} {{ blog_meta_formset.empty_form.DELETE|attr:"class:form-check-input remove_cfield"|attr:"type:checkbox" }}
+                                                            <label class="form-check-label" for="customCheckBox2">Delete</label> {% endcomment %}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <input type="hidden" name="form-id-count" value="0" id="form-id-count">
+                                        <div class="col-md-12">
+                                            <button type="button" id="add-cfield" class="btn btn-primary mb-3 mt-3 ">Add Custom Field</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                </div>  
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-12">
+                    <div class="custome-accordion XDiscussion" style="display:none;">
+                        <div class="accordion" id="accordion-discussion">
+                            <div class="accordion-item card">
+                                <h2 class="accordion-header border-0" id="headingOne">
+                                  <button class="accordion-button d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#with-discussion" aria-expanded="true" aria-controls="with-discussion">
+                                         <span class="acc-heading">Discussion</span>
+                                         {% comment %} <span class="ms-auto">(1/110)</span> {% endcomment %}
+                                  </button>
+                                </h2>
+                                <div id="with-discussion" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordion-discussion" style="">
+                                  <div class="accordion-body card-body pt-0">
+                                    <div class="row">
+                                        <div class="col-md-12 mb-3">
+                                            <div class="form-check">
+                                                {{ blog_form.comment|attr:"class:form-check-input"|attr:"type:checkbox" }}
+                                                <label class="form-check-label" for="flexCheckDefault">
+                                                Comment
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                  </div>
+                                </div>  
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-md-12">
+                    <div class="custome-accordion XSlug" style="display:none;">
+                        <div class="accordion" id="accordion-Slug">
+                            <div class="accordion-item card">
+                                <h2 class="accordion-header border-0" id="headingOne">
+                                  <button class="accordion-button d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#with-slug" aria-expanded="true" aria-controls="with-slug">
+                                         <span class="acc-heading">Slug</span>
+                                         {% comment %} <span class="ms-auto">(1/110)</span> {% endcomment %}
+                                  </button>
+                                </h2>
+                                <div id="with-slug" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordion-Slug" style="">
+                                  <div class="accordion-body card-body pt-0">
+                                    <div class="row">
+                                        <div class="col-md-12 mb-3">
+                                            <label class="form-label">Slug</label>
+                                            {{ blog_form.slug|attr:"class:form-control slug"|attr:"type:text"|attr:"id:slug" }}
+                                            
+                                            {% if blog_form.slug.errors %}
+                                            <div class="text-danger w-100 d-block mt-1">
+                                                {{ blog_form.slug.errors }}
+                                            </div>
+                                            {% endif %}                                      
+
+                                        </div>
+                                    </div>
+                                  </div>
+                                </div>  
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="custome-accordion XAuthor" style="display:none;">
+                        <div class="accordion" id="accordion-Author">
+                            <div class="accordion-item card">
+                                <h2 class="accordion-header border-0" id="headingOne">
+                                  <button class="accordion-button d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#with-author" aria-expanded="true" aria-controls="with-author">
+                                    
+                                         <span class="acc-heading">Author</span>
+                                         {% comment %} <span class="ms-auto">(1/110)</span> {% endcomment %}
+                                    
+                                  </button>
+                                </h2>
+                                <div id="with-author" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordion-Author" style="">
+                                  <div class="accordion-body card-body pt-0">
+                                    <div class="row">
+                                        <div class="col-md-12 mb-3">
+                                            <label class="form-label">Author {{form.user.data}} </label>
+                                                                                    
+                                                                                                                                                                          
+                                            <select name="user"  class="default-select form-control wide mb-3 form-control-lg">
+                                                
+                                                {% for user in users %}
+                                                    {% if blog_form.user.value %}
+                                                    <option {% if user.id == blog_form.user.value %} selected {% endif %} value="{{user.id}}">{{ user.username }} </option>
+                                                    {% else %}
+                                                    
+                                                    <option {% if request.user.id == user.id %} selected {% endif %} value="{{user.id}}">{{ user.username }}</option>
+                                                    {% endif %}
+                                                
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+
+
+                                    </div>
+                                  </div>
+                                </div>  
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="custome-accordion XSeo" style="display:none;">
+                        <div class="accordion" id="accordion-SEO">
+                            <div class="accordion-item card">
+                                <h2 class="accordion-header border-0" id="headingOne">
+                                  <button class="accordion-button d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#with-seo" aria-expanded="true" aria-controls="with-seo">
+                                    
+                                         <span class="acc-heading">SEO</span>
+                                         {% comment %} <span class="ms-auto">(1/110)</span> {% endcomment %}
+                                    
+                                  </button>
+                                </h2>
+                                <div id="with-seo" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordion-SEO" style="">
+                                  <div class="accordion-body card-body pt-0">
+                                    <div class="row">
+                                        <div class="row">
+                                            <div class="col-md-12 mb-3">
+                                                <label class="form-label">Blog Title</label>
+                                                {{ blog_seo_form.title|attr:"class:form-control"|attr:"type:text"|attr:"id:SEOBlogTitle"}}
+                                                <div class="text-danger w-100 d-block mt-1">
+                                                    {{ blog_seo_form.title.errors }}
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12 mb-3">
+                                                <label class="form-label">Meta Keywords</label>
+                                                {{ blog_seo_form.meta_keywords|attr:"class:form-control"|attr:"type:text"}}
+                                            </div>
+                                            <div class="col-md-12 mb-3">
+                                                <label class="form-label">Meta Descriptions</label>
+                                                {{ blog_seo_form.meta_descriptions|attr:"class:form-control"|attr:"rows:3"|attr:"cols:10"}}
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                  </div>
+                                </div>  
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="col-md-4">
+            <!--Start row class-->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="custome-accordion">
+                        <div class="accordion" id="accordion-publish">
+                            <div class="accordion-item card">
+                                <h2 class="accordion-header border-0" id="headingOne">
+                                  <button class="accordion-button d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#with-publish" aria-expanded="true" aria-controls="with-publish">
+                                    
+                                         <span class="acc-heading">Publish</span>
+                                         {% comment %} <span class="ms-auto">(1/110)</span> {% endcomment %}
+                                    
+                                  </button>
+                                </h2>
+                                <div id="with-publish" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordion-publish" style="">
+                                  <div class="accordion-body card-body pt-0">
+                                    <div class="row">
+                                        <div class="col-md-12 mb-3">
+                                            <label class="form-label">Status</label>
+                                            {{ blog_form.status|attr:"class:default-select form-control wide"|attr:"id:ContentStatus"  }}
+                                        </div>
+
+                                        <div class="col-md-12 mb-3">
+                                            <label class="form-label">Visibility</label>
+                                            {{ blog_form.visibility|attr:"class:default-select form-control wide"|attr:"id:ContentVisibility"  }}
+                                        </div>
+
+                                        <div class="col-md-12 mb-3" id="PublicPasswordTextbox" {% if blog_form.password.value == None %} style="display: none;"{% endif %}>
+                                            <label class="form-label">Password</label>
+                                            {{ blog_form.password|attr:"class:form-control"|attr:"type:password"|attr:"id:ContentPassword" }}
+                                        </div>
+                                       
+                                        <div class="col-md-12 mb-3">
+                                            <label class="form-label">Published on</label>
+                                            {{ blog_form.publish_on|attr:"class:datetimepicker form-control"|attr:"type:date"|attr:"id:PublishDateTimeTextbox" }}
+                                        </div>
+
+                                        <div class="col-md-12 mb-3">
+                                          <button type="submit" class="btn btn-primary">{% if not edit %}Publish{% else %}Update{% endif %}</button>
+                                      </div>
+
+                                    </div>
+                                  </div>
+                                </div>  
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="col-md-12">
+                    <div class="custome-accordion XCategories" style="display:none;">
+                        <div class="accordion" id="accordion-categories">
+                            <div class="accordion-item card">
+                                <h2 class="accordion-header border-0" id="headingOne">
+                                  <button class="accordion-button d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#with-categories" aria-expanded="true" aria-controls="with-categories">
+                                         <span class="acc-heading">Categories</span>
+                                         {% comment %} <span class="ms-auto">(1/110)</span> {% endcomment %}
+                                  </button>
+                                </h2>
+                                <div id="with-categories" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordion-categories" style="">
+                                  <div class="accordion-body card-body pt-0">
+                                    <div class="row">
+                                    <div class="col-md-12 mb-3">
+                                        <label class="form-label text-primary">Categories Tree</label>
+
+
+                                            <div id="categories_checkbox">
+                                                <ul class="category-checkbox-list">
+
+
+                                                    
+                                                    {% recursetree categories %}
+                                                    <li class="BlogCategory{{node.id}}">
+                                                        <div class="form-check custom-checkbox">
+                                                            <input type="checkbox"
+                                                                   name="cat_checks[]"
+                                                                   value="{{node.id}}"
+                                                                   class="form-check-input blog_categories"
+                                                                   {% if selected_categories %}
+                                                                        {% if node in selected_categories %}
+                                                                            checked
+                                                                        {% endif %}
+                                                                   {% endif %} >
+                                                            <label class="form-check-label">{{node.title}}</label>
+                                                        </div>
+                                                        {% if not node.is_leaf_node %}
+                                                        <ul class="category-checkbox-list">
+                                                            {{children}}
+                                                        </ul>
+                                                        {% endif %}
+                                                    </li>
+                                                    {% endrecursetree %}
+                                                </ul>
+                                            </div>
+
+                                    </div>
+
+
+                                   
+                                    <div class="col-md-12 mb-3">
+                                        <a href="javascript:void(0)" title="Click to add new category" class="addNewBlogCategorylink text-primary"><i class="fa fa-plus text-success"></i> Add New Category</a>
+                                    </div>
+
+                                    <div class="col-md-12 mb-3 newCategoryDiv" style="display: none;">
+                                        <div class="row">
+                                            <div class="col-md-12 mb-3">
+                                                <label class="form-label">Name</label>
+                                                {{ category_form.title|attr:"class:form-control newCategoryTitle"|attr:"type:text" }}
+                                            </div>
+
+                                            <div class="col-md-12 mb-3">
+                                                <label class="form-label">Parent Category</label>
+                                                {{ category_form.parent|attr:"class:form-control CategoryParentId"|attr:"type:text" }} 
+                                            </div>
+
+                                            <div class="col-md-12 mb-3">
+                                                <button type="button" class="btn btn-primary addNewBlogCategoryBtn" data-url="{% url 'dashboard:blog:blog_category_add' %}">Save</button>
+                                            </div>
+                                        </div>
+                                       
+                                    </div>
+
+                                    </div>
+                                  </div>
+                                </div>  
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="custome-accordion XFeaturedImage" style="display:none;">
+                        <div class="accordion" id="accordion-FeaturedImage">
+                            <div class="accordion-item card">
+                                <h2 class="accordion-header border-0" id="headingOne">
+                                  <button class="accordion-button d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#with-featuredimage" aria-expanded="true" aria-controls="with-featuredimage">
+                                         <span class="acc-heading">Featured Image</span>
+                                        
+                                  </button>
+                                </h2>
+                                <div id="with-featuredimage" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordion-FeaturedImage" style="">
+                                  <div class="accordion-body card-body pt-0">
+                                    <div class="row">
+                                        <div class="col-md-12 mb-3">
+                                              <div class="avatar-upload feature-img-upload">
+                                                   
+                                                    <div class="avatar-preview feature-img">
+                                                        <div id="imagePreview" style="background-image: url('{{ blog_form.instance.feature_image.url }}');">
+                                                        </div>
+                                                    </div>
+
+                                                    {{ blog_form.feature_image|attr:"type:file"|attr:"class:form-control form-control-sm"|attr:"id:id_avatar" }}
+                                                </div>
+                                        </div>
+                                    </div>
+                                  </div>
+                                </div>  
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="custome-accordion XVideo" style="display:none;">
+                        <div class="accordion" id="accordion-VideoURL">
+                            <div class="accordion-item card">
+                                <h2 class="accordion-header border-0" id="headingOne">
+                                  <button class="accordion-button d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#with-videourl" aria-expanded="true" aria-controls="with-videourl">
+                                         <span class="acc-heading">Video URL</span>
+                                  </button>
+                                </h2>
+                                <div id="with-videourl" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordion-VideoURL" style="">
+                                  <div class="accordion-body card-body pt-0">
+                                    <div class="row">
+                                        <div class="col-md-12 mb-3">
+                                            {{ blog_form.video_url|attr:"type:text"|attr:"class:form-control"|attr:"placeholder:URL" }}
+                                            <p class="text-muted">{{ blog_form.video_url.help_text  }}</p>
+
+                                            <div class="text-danger w-100 d-block mt-1">
+                                                {{ blog_form.video_url.errors }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                  </div>
+                                </div>  
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="custome-accordion XTags" style="display:none;">
+                        <div class="accordion" id="accordion-tags">
+                            <div class="accordion-item card">
+                                <h2 class="accordion-header border-0" id="headingOne">
+                                  <button class="accordion-button d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#with-tags" aria-expanded="true" aria-controls="with-tags">
+                                         <span class="acc-heading">Tags</span>
+                                  </button>
+                                </h2>
+                                <div id="with-tags" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordion-tags" style="">
+                                  <div class="accordion-body card-body pt-0">
+                                    <div class="row">
+                                        <div class="col-md-12 mb-3">
+                                           
+                                            <input type="text" name="input-tags" class="form-control blog-tags-input" value="{{ str_tags }}" >
+                                            <div class="text-muted w-100 d-block mt-1">
+                                               <p>use comma to separat the tags</p>
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+                                  </div>
+                                </div>  
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--End row class-->
+
+        </div>
+
+    </div>
+</form>
+
+
+<script type="text/javascript">
+  var screenOptionArray = JSON.stringify({{ ScreenOption|safe }});
+  console.log(screenOptionArray);
+  
+</script>
+
+
+{% endblock %}
+
+
+
+{% block additional_js %}
+
+<script type="text/javascript">
+   
+    jQuery('.blog-tags-input').tagsinput({
+        itemText: function(item) {
+            return item.toLowerCase();
+          }
+    });
+  </script>
+
+{% comment %} <script type="text/javascript">
+  $(".multi-select").select2({
+     placeholder: "No Parent"
+ });
+</script> {% endcomment %}
+
+{% endblock %}

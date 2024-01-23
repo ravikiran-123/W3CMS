@@ -1,0 +1,120 @@
+{% load static mptt_tags custom_tags %}
+
+{% comment %} #{{site_config.Site.opening_time.value}} {% endcomment %}
+{% comment %} {{site_config.Site.email.value}} {% endcomment %}
+{% comment %} {{site_config.Site.contact.value}} {% endcomment %}
+<!-- header -->
+<header class="site-header mo-left header-full header header-transparent">
+    <!-- Main Header -->
+    <div class="sticky-header main-bar-wraper navbar-expand-lg">
+        <div class="main-bar clearfix ">
+            <div class="container-fluid">
+                <div class="header-content-bx">
+                    <!-- website logo -->
+                    <div class="logo-header">
+                        <a href="{% url 'frontend:home' %}" class="logo-white"><img src="{{site_config.Site.other_logo.value}}" alt=""></a>
+                    </div>
+                    <!-- Extra Nav -->
+                    <div class="extra-nav">
+                        <div class="extra-cell">
+                            <ul>
+                                <li class="search-btn">
+                                    <a href="javascript:;" class="btn-link menu-icon">
+                                        <div class="menu-icon-in">
+                                            <span></span>
+                                            <span></span>
+                                            <span></span>
+                                            <span></span>
+                                        </div>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- Main Nav -->
+                    <div class="header-nav navbar-collapse collapse justify-content-center nav-dark" id="navbarNavDropdown">
+                        <ul class="nav navbar-nav">	
+                            {% with menu_items='header-menu'|getMenu %}
+                                {% recursetree menu_items %}
+                                {% if not node.is_leaf_node %}
+                                <li  class="sub-menu-down">
+                                {% else %}
+                                <li >
+                                {% endif %}
+                                    <a 
+                                    {% if node.attributes.target == '1' %}
+                                    target="_blank"
+                                    {% endif %}
+                                    class="{{ node.attributes.class }}"
+                                    title="{{ node.attributes.title }}" 
+                                    href="{% if node.link %}
+                                            {{ node.link }}
+                                            {% else %}
+                                            {{ node.type|getMenuItemUrl:node.item_id }}
+                                        {% endif %}"
+                                    >
+                                        {{node.title|truncatechars:20}}
+                                    </a>
+                                    {% if not node.is_leaf_node %}
+                                    <ul class="sub-menu">
+                                        {{children}}
+                                    </ul>
+                                    {% endif %}
+                                </li>
+                                {% endrecursetree %}
+                            {% endwith %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Main Header END -->
+    <!-- Header Left -->
+    <div class="header-nav navbar-collapse collapse full-sidenav content-scroll">
+        <div class="location">
+            <p><i class="fa fa-map-marker"></i>{{site_config.Site.address.value|safe}}</p>
+        </div>
+        <ul class="nav navbar-nav">	
+            {% with menu_items='header-menu'|getMenu %}
+                {% recursetree menu_items %}
+                {% if not node.is_leaf_node %}
+                <li  class="sub-menu-down">
+                {% else %}
+                <li >
+                {% endif %}
+                    <a 
+                    {% if node.attributes.target == '1' %}
+                    target="_blank"
+                    {% endif %}
+                    class="{{ node.attributes.class }}"
+                    title="{{ node.attributes.title }}" 
+                    href="{% if node.link %}
+                            {{ node.link }}
+                            {% else %}
+                            {{ node.type|getMenuItemUrl:node.item_id }}
+                        {% endif %}"
+                    
+
+                    >
+                        {{node.title|truncatechars:20}}
+                    </a>
+                    {% if not node.is_leaf_node %}
+                    <ul class="sub-menu">
+                        {{children}}
+                    </ul>
+                    {% endif %}
+                </li>
+                {% endrecursetree %}
+            {% endwith %}
+        </ul>
+        <div class="logo-header logo-white">
+            <a href="{% url 'frontend:home' %}" class="logo-white"><img src="{{site_config.Site.other_logo.value}}" alt=""></a>
+        </div>
+    </div>
+    <div class="menu-close">
+        <i class="la la-close"></i>
+    </div>
+    <!-- Header Left End -->
+</header>
+<!-- header END -->

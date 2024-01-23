@@ -1,0 +1,288 @@
+{% load i18n %}
+{% load static custom_tags %}
+
+<div class="dlabnav">
+    <div class="dlabnav-scroll">
+        <ul class="metismenu" id="menu">
+            {% if perms.users.view_customuser or perms.auth.view_group or perms.auth.view_permission %} 
+                <li>
+                    <a class="has-arrow " href="javascript:void(0);" aria-expanded="false">
+                        <i class="bi bi-person"></i>
+                        <span class="nav-text">{% translate 'User' %}<span class="badge light badge-sm badge-primary ms-2 mb-0">{% translate 'Modules'%}</span></span>
+                        
+                        <!-- <span class="badge badge-xs  ms-1" style="background-color: #e9f542; color:#ff6a59;">New</span> -->
+                    </a>
+                    <ul aria-expanded="false">
+
+                        {% if perms.users.view_customuser or perms.users.change_customuser or perms.users.add_customuser or perms.users.delete_customuser %}
+                        <li><a href="{% url 'dashboard:users' %}">{% translate 'Users' %}</a></li>
+                        {% endif %}
+                        {% if perms.auth.view_group or perms.auth.change_group or perms.auth.add_group or perms.auth.delete_group %}
+                        <li><a href="{% url 'dashboard:groups' %}">{% trans 'Groups' %}</a></li>
+                        {% endif %}
+                        {% if perms.auth.view_permission or perms.auth.change_permission or perms.auth.add_permission or  perms.auth.delete_permission%}
+                        <li><a href="{% url 'dashboard:permissions' %}">{% translate 'Permissions' %}</a></li>
+                        {% endif %}
+                    </ul>
+                </li>
+            {% endif %}
+
+            {% if perms.pages.view_page or perms.blog.view_blogs or perms.menu.view_menus or perms.blog.view_comment or perms.blog.view_reels or perms.blog.view_slider or perms.blog.view_categories or perms.blog.view_tags or perms.contactus.view_contactus or perms.subscribe.view_subscribers %} 
+            <li>
+                <a class="has-arrow " href="javascript:void(0);" aria-expanded="false">
+                    <i class="bi bi-box-seam"></i>
+                    <span class="nav-text">{% translate 'CMS' %}<span class="badge light badge-sm badge-primary ms-2 mb-0">{% translate 'Modules'%}</span></span>
+                </a>
+            
+                <ul aria-expanded="false">
+                    {% if perms.pages.view_page or perms.pages.change_page or perms.pages.add_page or perms.pages.delete_page %}
+                    <li><a href="{% url 'dashboard:pages:pages' %}">{% translate 'Page' %}</a></li>
+                    {% endif %}
+                    {% if perms.blog.view_blogs or perms.blog.view_categories or perms.blog.view_tags  %}
+                        <li><a class="has-arrow" href="javascript:void(0);" aria-expanded="false">{% translate 'Blog' %} </a>
+                            <ul aria-expanded="false">
+                                {% if perms.blog.view_blogs %}
+                                <li><a href="{% url 'dashboard:blog:blogs' %}">{% translate 'Blogs'%}</a></li>
+                                {% endif %}
+                                {% if perms.blog.view_categories %}
+                                <li><a href="{% url 'dashboard:blog:blogCategory' %}">{% translate 'Categories'%}</a></li>
+                                {% endif %}
+                                {% if perms.blog.view_tags %}
+                                <li><a href="{% url 'dashboard:blog:blogTag' %}">{% translate 'Tags' %}</a></li>
+                                {% endif %}
+                            
+                            </ul>
+                        </li>
+                    {% endif %}
+                    
+                    {% if perms.comment.view_comment %}
+                    <li><a href="{% url 'dashboard:comment:comments' %}">{% translate 'Comment' %}</a></li>
+                    {% endif %}
+
+                    {% if perms.reels.view_reels or perms.reels.change_reels or perms.reels.add_reels or perms.reels.delete_reels %}
+                    <li><a href="{% url 'dashboard:reels:reel_list' %}">{% translate 'reels' %}</a></li>
+                    {% endif %}
+
+                    <li><a href="{% url 'dashboard:sliders:slider_list' %}">{% translate 'sliders' %}</a></li>
+                    
+                
+
+                    {% if perms.menu.view_menus or perms.menu.change_menus or perms.menu.add_menus or perms.menu.delete_menus %}
+                    <li><a href="{% url 'dashboard:menu:setup' %}">{% translate 'Menu Setup' %}</a></li>
+                    {% endif %}
+
+
+                    {% if perms.subscribe.view_subscribes or perms.subscribe.change_subscribes or perms.subscribe.add_subscribes or perms.subscribe.delete_subscribes %}
+                    <li><a href="{% url 'dashboard:subscribe:subscribers' %}">{% translate 'Subscribers' %}</a></li>
+                    {% endif %}
+
+
+                    {% if perms.contactus.view_contactus or perms.contactus.change_contactus or perms.contactus.add_contactus or perms.contactus.delete_contactus %}
+                    <li><a href="{% url 'dashboard:contactus:contact-us' %}">{% translate 'Contact Us' %}</a></li>
+                    {% endif %}
+                
+                </ul>
+
+            </li>
+            {% endif %} 
+
+
+
+        {% if perms.dashboard.view_configurations or perms.dashboard.change_configurations or perms.dashboard.add_configurations or perms.dashboard.delete_configurations %}
+            <li>
+                <a class="has-arrow " href="javascript:void(0);" aria-expanded="false">
+                    <i class="bi bi-gear"></i>
+                    <span class="nav-text">{% translate 'Config' %}<span class="badge light badge-sm badge-primary ms-2 mb-0">{% translate 'Modules'%}</span></span>
+                    
+                </a>
+                <ul aria-expanded="false">
+                    {% for prefix in ''|getAllprefix %}
+                    <li><a href="{% url 'dashboard:filter-config' prefix=prefix %}">{{prefix}}</a></li>
+                    {% endfor %}
+                    <li><a href="{% url 'dashboard:all-config' %}">{% translate 'Configurations' %}</a></li>
+                </ul>
+            </li>
+        {% endif %}
+
+
+
+
+            <!-- <li><a class="has-arrow " href="javascript:void(0);" aria-expanded="false">
+                    <i class="bi bi-grid"></i>
+                    <span class="nav-text">{% translate 'Dashboard' %}</span>
+                </a>
+                <ul aria-expanded="false">
+                    <li><a href="{% url 'dashboard:index' %}">{% translate 'Dashboard Light' %}</a></li>
+                    <li><a href="{% url 'dashboard:index-2' %}">{% translate 'Dashboard Dark' %}</a></li>
+                    <li><a href="{% url 'dashboard:schedule' %}">{% translate 'Schedule' %}</a></li>
+                    <li><a href="{% url 'dashboard:instructors' %}">{% translate 'Instructors' %}</a></li>
+                    <li><a href="{% url 'dashboard:message' %}">{% translate 'Message' %}</a></li>	
+                    <li><a href="{% url 'dashboard:activity' %}">{% translate 'Activity' %}</a></li>	
+                    <li><a href="{% url 'dashboard:profile' %}">{% translate 'Profile' %}</a></li>	
+                </ul>
+            </li> -->
+
+
+<!-- 
+            <li><a class="has-arrow " href="javascript:void(0);" aria-expanded="false">
+                <i class="bi bi-book"></i>
+
+                    <span class="nav-text">{% translate 'Courses' %}</span>
+                </a>
+                <ul aria-expanded="false">
+                    <li><a href="{% url 'dashboard:courses' %}">{% translate 'Courses' %}</a></li>
+                    <li><a href="{% url 'dashboard:course-details-1' %}">{% translate 'Courses Details 1' %}</a></li>
+                    <li><a href="{% url 'dashboard:course-details-2' %}">{% translate 'Courses Details 2' %}</a></li>
+                    
+                    
+                </ul>
+
+            </li> -->
+            <!-- <li><a class="has-arrow " href="javascript:void(0);" aria-expanded="false">
+                    <i class="bi bi-people"></i>
+
+                    <span class="nav-text">{% translate 'Instructor' %}</span>
+                </a>
+                <ul aria-expanded="false">
+                    <li><a href="{% url 'dashboard:instructor-dashboard' %}">{% translate 'Dashboard' %}</a></li>
+                    <li><a href="{% url 'dashboard:instructor-courses' %}">{% translate 'Courses' %}</a></li>
+                    <li><a href="{% url 'dashboard:instructor-schedule' %}">{% translate 'Schedule' %}</a></li>
+                    <li><a href="{% url 'dashboard:instructor-students' %}">{% translate 'Students' %}</a></li>
+                    <li><a href="{% url 'dashboard:instructor-resources' %}">{% translate 'Resources' %}</a></li>
+                    <li><a href="{% url 'dashboard:instructor-transactions' %}">{% translate 'Transactions' %}</a></li>
+                    <li><a href="{% url 'dashboard:instructor-liveclass' %}">{% translate 'Live class' %}</a></li>
+                    
+                </ul>
+
+            </li>
+            <li><a class="has-arrow " href="javascript:void(0);" aria-expanded="false">
+                <i class="bi bi-info-circle"></i>
+                    <span class="nav-text">{% translate 'Apps'%}</span>
+                </a>
+                <ul aria-expanded="false">
+                    <li><a href="{% url 'dashboard:app-profile' %}">{% translate 'Profile' %}</a></li>
+                    <li><a href="{% url 'dashboard:post-details' %}">{% translate 'Post Details'%}</a></li>
+                    <li><a class="has-arrow" href="javascript:void(0);" aria-expanded="false">{% translate 'Email'%}</a>
+                        <ul aria-expanded="false">
+                            <li><a href="{% url 'dashboard:email-compose' %}">{% translate 'Compose'%}</a></li>
+                            <li><a href="{% url 'dashboard:email-inbox' %}">{% translate 'Inbox'%}</a></li>
+                            <li><a href="{% url 'dashboard:email-read' %}">{% translate 'Read'%}</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="{% url 'dashboard:app-calender' %}">{% translate 'Calendar'%}</a></li>
+                    <li><a class="has-arrow" href="javascript:void(0);" aria-expanded="false">{% translate 'Shop'%}</a>
+                        <ul aria-expanded="false">
+                            <li><a href="{% url 'dashboard:ecom-product-grid' %}">{% translate 'Product Grid'%}</a></li>
+                            <li><a href="{% url 'dashboard:ecom-product-list' %}">{% translate 'Product List'%}</a></li>
+                            <li><a href="{% url 'dashboard:ecom-product-detail' %}">{% translate 'Product Details'%}</a></li>
+                            <li><a href="{% url 'dashboard:ecom-product-order' %}">{% translate 'Order'%}</a></li>
+                            <li><a href="{% url 'dashboard:ecom-checkout' %}">{% translate 'Checkout'%}</a></li>
+                            <li><a href="{% url 'dashboard:ecom-invoice' %}">{% translate 'Invoice'%}</a></li>
+                            <li><a href="{% url 'dashboard:ecom-customers' %}">{% translate 'Customers'%}</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <li><a class="has-arrow " href="javascript:void(0);" aria-expanded="false">
+                    <i class="bi bi-pie-chart"></i>
+                    <span class="nav-text">{% translate 'Charts' %}</span>
+                </a>
+                <ul aria-expanded="false">
+                    <li><a href="{% url 'dashboard:chart-flot' %}">{% translate 'Flot'%}</a></li>
+                    <li><a href="{% url 'dashboard:chart-morris' %}">{% translate 'Morris'%}</a></li>
+                    <li><a href="{% url 'dashboard:chart-chartjs' %}">{% translate 'Chartjs'%}</a></li>
+                    <li><a href="{% url 'dashboard:chart-chartist' %}">{% translate 'Chartist'%}</a></li>
+                    <li><a href="{% url 'dashboard:chart-sparkline' %}">{% translate 'Sparkline'%}</a></li>
+                    <li><a href="{% url 'dashboard:chart-peity' %}">{% translate 'Peity'%}</a></li>
+                </ul>
+            </li>
+            <li><a class="has-arrow " href="javascript:void(0);" aria-expanded="false">
+                    <i class="bi bi-star"></i>
+                <span class="nav-text">{% translate 'Bootstrap' %}</span>
+                </a>
+                <ul aria-expanded="false">
+                    <li><a href="{% url 'dashboard:ui-accordion' %}">{% translate 'Accordion'%}</a></li>
+                    <li><a href="{% url 'dashboard:ui-alert' %}">{% translate 'Alert'%}</a></li>
+                    <li><a href="{% url 'dashboard:ui-badge' %}">{% translate 'Badge'%}</a></li>
+                    <li><a href="{% url 'dashboard:ui-button' %}">{% translate 'Button'%}</a></li>
+                    <li><a href="{% url 'dashboard:ui-modal' %}">{% translate 'Modal'%}</a></li>
+                    <li><a href="{% url 'dashboard:ui-button-group' %}">{% translate 'Button Group'%}</a></li>
+                    <li><a href="{% url 'dashboard:ui-list-group' %}">{% translate 'List Group'%}</a></li>
+                    <li><a href="{% url 'dashboard:ui-card' %}">{% translate 'Cards'%}</a></li>
+                    <li><a href="{% url 'dashboard:ui-carousel' %}">{% translate 'Carousel'%}</a></li>
+                    <li><a href="{% url 'dashboard:ui-dropdown' %}">{% translate 'Dropdown'%}</a></li>
+                    <li><a href="{% url 'dashboard:ui-popover' %}">{% translate 'Popover'%}</a></li>
+                    <li><a href="{% url 'dashboard:ui-progressbar' %}">{% translate 'Progressbar'%}</a></li>
+                    <li><a href="{% url 'dashboard:ui-tab' %}">{% translate 'Tab'%}</a></li>
+                    <li><a href="{% url 'dashboard:ui-typography' %}">{% translate 'Typography'%}</a></li>
+                    <li><a href="{% url 'dashboard:ui-pagination' %}">{% translate 'Pagination'%}</a></li>
+                    <li><a href="{% url 'dashboard:ui-grid' %}">{% translate 'Grid'%}</a></li>
+
+                </ul>
+            </li>
+            <li><a class="has-arrow " href="javascript:void(0);" aria-expanded="false">
+                    <i class="bi bi-heart"></i>
+                    <span class="nav-text">{% translate 'Plugins' %}</span>
+                </a>
+                <ul aria-expanded="false">
+                    <li><a href="{% url 'dashboard:uc-select2' %}">{% translate 'Select 2'%}</a></li>
+                    <li><a href="{% url 'dashboard:uc-nestable' %}">{% translate 'NestedTable'%}</a></li>
+                    <li><a href="{% url 'dashboard:uc-noui-slider' %}">{% translate 'Noui Slider'%}</a></li>
+                    <li><a href="{% url 'dashboard:uc-sweetalert' %}">{% translate 'Sweet Alert'%}</a></li>
+                    <li><a href="{% url 'dashboard:uc-toastr' %}">{% translate 'Toastr'%}</a></li>
+                    <li><a href="{% url 'dashboard:map-jqvmap' %}">{% translate 'Jqv Map'%}</a></li>
+                    <li><a href="{% url 'dashboard:uc-lightgallery' %}">{% translate 'Light Gallery'%}</a></li>
+                </ul>
+            </li>
+            <li><a href="{% url 'dashboard:widget-basic' %}" class="" aria-expanded="false">
+                    <i class="bi bi-gear-wide"></i>
+                    <span class="nav-text">{% translate 'Widget' %}</span>
+                </a>
+            </li>
+            <li><a class="has-arrow " href="javascript:void(0);" aria-expanded="false">
+                    <i class="bi bi-file-earmark-check"></i>
+                    <span class="nav-text">{% translate 'Forms'%}</span>
+                </a>
+                <ul aria-expanded="false">
+                    <li><a href="{% url 'dashboard:form-element' %}">{% translate 'Form Elements'%}</a></li>
+                    <li><a href="{% url 'dashboard:form-wizard' %}">{% translate 'Wizard'%}</a></li>
+                    <li><a href="{% url 'dashboard:form-ckeditor' %}">{% translate 'CkEditor'%}</a></li>
+                    <li><a href="{% url 'dashboard:form-pickers' %}">{% translate 'Pickers'%}</a></li>
+                    <li><a href="{% url 'dashboard:form-validation' %}">{% translate 'Form Validate'%}</a></li>
+                </ul>
+            </li>
+            <li><a class="has-arrow " href="javascript:void(0);" aria-expanded="false">
+                    <i class="bi bi-file-earmark-spreadsheet"></i>
+                    <span class="nav-text">{% translate 'Table'%}</span>
+                </a>
+                <ul aria-expanded="false">
+                    <li><a href="{% url 'dashboard:table-bootstrap-basic' %}">{% translate 'Bootstrap'%}</a></li>
+                    <li><a href="{% url 'dashboard:table-datatable-basic' %}">{% translate 'Datatable'%}</a></li>
+                </ul>
+            </li>
+            <li><a class="has-arrow " href="javascript:void(0);" aria-expanded="false">
+                    <i class="bi bi-file-earmark-break"></i>
+                    <span class="nav-text">{% translate 'Pages' %}</span>
+                </a>
+                <ul aria-expanded="false">
+                    <li><a class="has-arrow" href="javascript:void(0);" aria-expanded="false">{% translate 'Error'%}</a>
+                        <ul aria-expanded="false">
+                            <li><a href="{% url 'dashboard:page-error-400' %}">{% translate 'Error 400'%}</a></li>
+                            <li><a href="{% url 'dashboard:page-error-403' %}">{% translate 'Error 403'%}</a></li>
+                            <li><a href="{% url 'dashboard:page-error-404' %}">{% translate 'Error 404'%}</a></li>
+                            <li><a href="{% url 'dashboard:page-error-500' %}">{% translate 'Error 500'%}</a></li>
+                            <li><a href="{% url 'dashboard:page-error-503' %}">{% translate 'Error 503'%}</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="{% url 'dashboard:page-lock-screen' %}">{% translate 'Lock Screen'%}</a></li>
+                    <li><a href="{% url 'dashboard:empty-page' %}">{% translate 'Empty Page'%}</a></li>
+                </ul>
+            </li>
+        </ul> -->
+
+        <div class="copyright mt-2">
+          
+            <p class="fs-12 text-center">Made with <span class="heart"></span> by DexignZone</p>
+        </div>
+    </div>
+</div>
